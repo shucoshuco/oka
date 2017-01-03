@@ -1,0 +1,57 @@
+.text-center {
+    text-align: center;
+}
+
+.board {
+	float: left;
+	width: 600px;
+	height: 600px;
+	background-color: blue;
+}
+
+.cell {
+	float: left;
+	border-radius: 5px;
+	padding: 2px;
+	position: absolute;
+}
+
+.cell-ver {
+	background-color: red;
+	width: 50px;
+	height: 100px;
+}
+
+.cell-hor {
+	background-color: red;
+	width: 100px;
+	height: 50px;
+}
+
+.triangle-topleft {
+	width: 0;
+	height: 0;
+	border-top: 100px solid red;
+	border-right: 100px solid transparent;
+}
+
+.triangle-topright {
+	width: 0;
+	height: 0;
+	border-top: 100px solid red;
+	border-left: 100px solid transparent;
+}
+
+.triangle-bottomright {
+	width: 0;
+	height: 0;
+	border-bottom: 100px solid red;
+	border-left: 100px solid transparent;
+}
+
+.triangle-bottomleft {
+	width: 0;
+	height: 0;
+	border-bottom: 100px solid red;
+	border-right: 100px solid transparent;
+}

@@ -1,20 +1,20 @@
-var web = angular.module('web', ['ngMaterial', 'ngAnimate', 'ngMessages', 'ngAria', 'ui.router']);
+var web = angular.module('web',
+    ['ngMaterial', 'ngAnimate', 'ngMessages', 'ngAria', 'ui.router']);
 
 (function(app) {
-    app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+    app.config(['$stateProvider', '$urlRouterProvider',
+        function($stateProvider, $urlRouterProvider) {
+            $urlRouterProvider.otherwise('/');
 
-        $urlRouterProvider.otherwise('/');
-
-        $stateProvider.state('home', {
-            url: '/',
-            templateUrl: 'partials/home-partial.html',
-            controller: 'HomeController'
-        })
-
-        .state('about', {
-            url: '/about',
-            templateUrl: 'partials/about-partial.html',
-            controller: 'AboutController'
-        });
-    }]);
+            $stateProvider.state('board', {
+                url: '/',
+                templateUrl: 'partials/board-partial.html',
+                controller: 'BoardController'
+            }).state('about', {
+                url: '/about',
+                templateUrl: 'partials/about-partial.html',
+                controller: 'AboutController'
+            });
+        }
+    ]);
 })(web);

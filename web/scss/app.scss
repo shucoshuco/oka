@@ -1,57 +1,71 @@
+$levels: (#FF0000, #00FF00, #0000FF, #660066, #006600);
+
 .text-center {
     text-align: center;
 }
 
 .board {
 	float: left;
-	width: 600px;
-	height: 600px;
-	background-color: blue;
+	background-color: #333333;
 }
 
 .cell {
 	float: left;
-	border-radius: 5px;
 	padding: 2px;
 	position: absolute;
 }
 
-.cell-ver {
-	background-color: red;
-	width: 50px;
-	height: 100px;
+@for $i from 1 through length($levels) {
+    .cell.level-#{$i} {
+        background-color: rgba(nth($levels, $i), 1);
+    }
 }
 
-.cell-hor {
-	background-color: red;
-	width: 100px;
-	height: 50px;
+.cell-inner {
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+	background-color: #999999;
+
+	span {
+	 	position: absolute;
+	 	bottom: 0.5em;
+	 	right: 0.6em;
+	    background-color: brown;
+	    border-radius: 100%;
+	    padding: 1px;
+	    width: 1.5em;
+	    height: 1.5em;
+	    text-align: center;
+	}
 }
 
-.triangle-topleft {
-	width: 0;
-	height: 0;
-	border-top: 100px solid red;
-	border-right: 100px solid transparent;
+.triangle {
+	position: relative;
+	background-color: orange;
+	text-align: left;
+
+	&:before, &:after {
+		content: '';
+		position: absolute;
+		background-color: inherit;
+	}
 }
 
-.triangle-topright {
-	width: 0;
-	height: 0;
-	border-top: 100px solid red;
-	border-left: 100px solid transparent;
+.triangle,
+.triangle:before,
+.triangle:after {
+	width:  10em;
+	height: 10em;
+	border-top-right-radius: 30%;
 }
 
-.triangle-bottomright {
-	width: 0;
-	height: 0;
-	border-bottom: 100px solid red;
-	border-left: 100px solid transparent;
+.triangle {
+	transform: rotate(-60deg) skewX(-30deg) scale(1,.866);
 }
-
-.triangle-bottomleft {
-	width: 0;
-	height: 0;
-	border-bottom: 100px solid red;
-	border-right: 100px solid transparent;
+.triangle:before {
+	transform: rotate(-135deg) skewX(-45deg) scale(1.414,.707) translate(0,-50%);
+}
+.triangle:after {
+	transform: rotate(135deg) skewY(-45deg) scale(.707,1.414) translate(50%);
 }

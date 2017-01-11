@@ -1,25 +1,34 @@
-$levels: (#FF0000, #00FF00, #0000FF, #660066, #006600);
+$levels: (#FFFFFF, #86E25E, #6DDB3E, #56D51F, #0A6400);
 
 .text-center {
     text-align: center;
 }
 
+.players {
+	display: flex;
+
+	& > * {
+		flex: 1 1 0%;
+	}
+}
+
 .board {
 	float: left;
 	background-color: #333333;
+	position: relative;
 }
 
 .cell {
-	float: left;
 	padding: 2px;
 	position: absolute;
+
+	@for $i from 1 through length($levels) {
+	    &.level-#{$i} {
+	        background-color: rgba(nth($levels, $i), 1);
+	    }
+	}
 }
 
-@for $i from 1 through length($levels) {
-    .cell.level-#{$i} {
-        background-color: rgba(nth($levels, $i), 1);
-    }
-}
 
 .cell-inner {
 	width: 100%;
@@ -33,39 +42,37 @@ $levels: (#FF0000, #00FF00, #0000FF, #660066, #006600);
 	 	right: 0.6em;
 	    background-color: brown;
 	    border-radius: 100%;
-	    padding: 1px;
+	    padding: 0.2em 0.1em 0.1em 0.1em;
 	    width: 1.5em;
 	    height: 1.5em;
 	    text-align: center;
 	}
 }
 
-.triangle {
-	position: relative;
-	background-color: orange;
-	text-align: left;
+.player {
+	position: absolute;
+	float: left;
+	background-size: cover;
 
-	&:before, &:after {
-		content: '';
-		position: absolute;
-		background-color: inherit;
+	&.slow {
+		transition: all 0.7s ease-out;
+	}
+	&.medium {
+		transition: all 0.5s ease-out;	
+	}
+	&.fast {
+		transition: all 0.3s ease-out;	
 	}
 }
 
-.triangle,
-.triangle:before,
-.triangle:after {
-	width:  10em;
-	height: 10em;
-	border-top-right-radius: 30%;
+.gender-male {
+	background-image: url('../images/male.png');
+	width: 2em;
+	height: 2.5em;
 }
 
-.triangle {
-	transform: rotate(-60deg) skewX(-30deg) scale(1,.866);
-}
-.triangle:before {
-	transform: rotate(-135deg) skewX(-45deg) scale(1.414,.707) translate(0,-50%);
-}
-.triangle:after {
-	transform: rotate(135deg) skewY(-45deg) scale(.707,1.414) translate(50%);
+.gender-female {
+	background-image: url('../images/female.png');
+	height: 2.5em;
+	width: 1.5em;
 }

@@ -11,18 +11,19 @@ var inject = require('gulp-inject');
 var imagemin = require('gulp-imagemin');
 var iife = require("gulp-iife");
 var cleanCSS = require('gulp-clean-css');
+var babel = require('gulp-babel');
 var Server = require('karma').Server;
 
 gulp.task('default', ['serve']);
 
-gulp.task('init', ['sass', 'bower', 'js', 'uglify-js', 'image', 'image-min', 'html', 'index']);
+gulp.task('init', ['lint', 'sass', 'bower', 'js', 'uglify-js', 'image', 'image-min', 'html', 'index']);
 
 gulp.task('lint', () => {
     // ESLint ignores files with "node_modules" paths.
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
     // Otherwise, the task may end before the stream has finished.
-    return gulp.src(['public/**/*.js','!node_modules/**'])
+    return gulp.src(['public/**/*.js','!public/js/min/**'])
         // eslint() attaches the lint output to the "eslint" property
         // of the file object so it can be used by other modules.
         .pipe(eslint())
@@ -137,6 +138,9 @@ gulp.task('image-min', function() {
 
 gulp.task('uglify-js', function() {
     return gulp.src(['./public/js/config/app.js', './public/js/factories/**/*.js', './public/js/services/**/*.js', './public/js/controllers/**/*.js', './public/js/filters/**/*.js', './public/js/directives/**/*.js'])
+        .pipe(babel({
+            presets: ['es2015']
+        }))
         .pipe(concat('all.min.js'))
         .pipe(gulp.dest('./public/js/min/'))
         .pipe(uglify())

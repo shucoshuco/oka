@@ -1,4 +1,4 @@
-var web = angular.module('web',
+let web = angular.module('web',
     ['ngMaterial', 'ngAnimate', 'ngMessages', 'ngAria', 'ui.router']);
 
 (function(app) {
@@ -9,12 +9,12 @@ var web = angular.module('web',
             $stateProvider.state('board', {
                 url: '/',
                 templateUrl: 'partials/board-partial.html',
-                controller: 'BoardController'
+                controller: 'BoardController',
             }).state('about', {
                 url: '/about',
                 templateUrl: 'partials/about-partial.html',
-                controller: 'AboutController'
+                controller: 'AboutController',
             });
-        }
+        },
     ]);
 })(web);

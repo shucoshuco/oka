@@ -1,4 +1,7 @@
 module.exports = {
     "extends": "google",
-    "installedESLint": true
+    "installedESLint": true,
+    "env": {
+    	"es6": true
+    }
 };

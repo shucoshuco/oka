@@ -17,7 +17,6 @@
     	</div>
 	</div>
 </md-content>
-<md-content>
     <md-toolbar class="md-hue-2">
       <div class="md-toolbar-tools">
         <h2>
@@ -26,7 +25,7 @@
       </div>
     </md-toolbar>
 
-	<div class="board" id="board" style="width: {{board.width}}px; height: {{board.width}}px; font-size: {{board.fontSize}}em">
+	<div class="board" id="board" style="width: {{board.parameters.width}}px; height: {{board.parameters.width}}px; font-size: {{board.parameters.fontSize}}em; left: {{board.parameters.left}}px">
 		<board-cell ng-repeat="cell in board.cells" cell="cell"></board-cell>
 		<board-player player="players[0]" speed="movement.speed"></board-player>
 		<board-player player="players[1]" speed="movement.speed"></board-player>

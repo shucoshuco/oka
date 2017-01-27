@@ -1,0 +1,8 @@
+include 'cells'
+include 'users'
+include 'games'
+include 'eureka-server'
+include 'zuul-server'
+include 'config-server'
+
+rootProject.name = 'oka'

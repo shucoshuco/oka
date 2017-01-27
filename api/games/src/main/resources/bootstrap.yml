@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: games
+  cloud:
+    config:
+      uri: http://localhost:8888
+
+server:
+  port: 8083

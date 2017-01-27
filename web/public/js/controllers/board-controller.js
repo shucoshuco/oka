@@ -2,7 +2,13 @@
 	app.controller('BoardController',
 		['$scope', '$compile', '$timeout', '$window',
 		function($scope, $compile, $timeout, $window) {
-			let avlbleWidth = $window.innerWidth - $window.innerWidth * 0.05;
+			let initialWidth = function() {
+				let board = document.getElementById('board');
+				let initialWidth = board.clientWidth / 2;
+				initialWidth = Math.max(initialWidth, 320);
+				return initialWidth - initialWidth * 0.05;
+			};
+
 			let ncells = 69;
 			let n1stCell = Math.floor(ncells / 15);
 			let timeoutId;
@@ -163,41 +169,30 @@
 				updateCellPositions(cells, boardParameters);
 
 				return {
+					playing: false,
 					parameters: boardParameters,
 					cells: cells,
 				};
 			};
 
-			$scope.board = createBoard(avlbleWidth, ncells, n1stCell);
-
-			angular.element($window).bind('resize', function() {
-				$scope.$apply(function() {
-					avlbleWidth = $window.innerWidth - $window.innerWidth * 0.05;
-					$scope.board.parameters =
-						calculateBoardParameters(avlbleWidth, ncells, n1stCell);
-					updateCellPositions($scope.board.cells, $scope.board.parameters);
-					$scope.movement.refresh();
-				});
-			});
-
 			$scope.players = [
 				{
-					name: 'p1',
+					name: 'Félix',
 					gender: 'male',
-					nitems: 5,
+					nitems: 3,
 					position: 0,
+					index: 0,
 				},
 				{
-					name: 'p2',
+					name: 'Isabel',
 					gender: 'female',
 					nitems: 5,
 					position: 0,
+					index: 1,
 				},
 			];
 
-			$scope.offset = 1;
-
-			$scope.movement = (function(board, players) {
+			let initializeMovement = function(board, players) {
 				let moving = false;
 				let speed = 'fast';
 				let speeds = {'slow': 800, 'medium': 570, 'fast': 350};
@@ -303,6 +298,7 @@
 							calculateTriangleCenter(trs[1], cell),
 						];
 					}
+					// TODO Add more players to corner cells
 				};
 
 
@@ -359,8 +355,6 @@
 					board.cells[0].players.push(p);
 				});
 
-				updateCellPositions(board.cells[0]);
-
 				let turn = 0;
 
 				return {
@@ -371,14 +365,46 @@
 							updateCellPositions(cell);
 						});
 					},
-					advance: function() {
-						if (!moving) {
-							moveToPosition($scope.players[turn], $scope.offset);
-							turn = turn === 0 ? 1 : 0;
+					start: function() {
+						if (!board.playing) {
+							updateCellPositions(board.cells[0]);
+							board.playing = true;
+							players.forEach(function(player) {
+								player.visible = true;
+							});
+							$scope.players[turn].turn = true;
 						}
 					},
+					advance: function(n) {
+						if (!moving) {
+							moveToPosition($scope.players[turn], n);
+						}
+					},
+					nextTurn: function() {
+						$scope.players[turn].turn = false;
+						$scope.players[turn].nitems -= 1;
+						turn += 1;
+						if (turn == $scope.players.length) {
+							turn = 0;
+						}
+						$scope.players[turn].turn = true;
+					},
 				};
-			})($scope.board, $scope.players);
+			};
+
+			angular.element($window).bind('resize', function() {
+				$scope.$apply(function() {
+					$scope.board.parameters =
+						calculateBoardParameters(initialWidth(), ncells, n1stCell);
+					updateCellPositions($scope.board.cells, $scope.board.parameters);
+					$scope.movement.refresh();
+				});
+			});
+
+			$scope.board = createBoard(initialWidth(), ncells, n1stCell);
+			$scope.movement = initializeMovement($scope.board, $scope.players);
+			$scope.advance = $scope.movement.advance;
+			$scope.nextTurn = $scope.movement.nextTurn;
 		}]
 	);
 })(web);

@@ -1,0 +1,203 @@
+$levels: (#FFFFFF, #86E25E, #6DDB3E, #56D51F, #0A6400);
+
+.players-panel {
+	md-toolbar {
+		border-right: 1px solid;
+	}
+}
+
+.player-info {
+	
+	color: white;
+	padding: 1em;
+	flex: 1 1 0%;
+	border: 1px solid gray;
+	background-color: #009688;
+	position: relative;
+
+	&.turn {
+		background-color: #3949ab;
+	}
+
+	.main {
+		display: inline-block;
+		width: 100%;
+	}
+
+	.name {
+		font-size: 1.5em;
+		float: left;
+	}
+
+	.player-type {
+		float: right;
+	}
+
+	.clothes-container {
+	  list-style:none;
+	  width: 100%;
+	  padding: 0;
+	  margin: 0;
+
+	  li {
+	  	display: block;
+	  	float:left;
+	  	margin-right: 1em;
+	  	background-size: cover;
+	  	width: 2em;
+	  	height: 2em;
+	  }
+
+	  &.gender-male {
+	  	li {
+	  		background-image: url('../images/male-clothes.png');
+	  	}
+	  }
+	  &.gender-female {
+	  	li {
+	  		background-image: url('../images/female-clothes.png');
+	  	}
+	  }
+	}
+
+	.nude {
+		float: left;
+		width: 2.8em;
+		height: 4em;
+		background-size: cover;
+
+		&.gender-male {
+			background-image: url('../images/male-nude.jpg');
+		}
+		&.gender-female {
+			background-image: url('../images/female-nude.jpg');
+		}
+	}
+
+	.animate-repeat {
+		&.ng-move, &.ng-enter, &.ng-leave {
+	  		transition: all linear 0.5s;
+		}
+		&.ng-leave.ng-leave-active,
+		&.ng-move, &.ng-enter {
+	  		opacity:0;
+		}
+		&.ng-leave,
+		&.ng-move.ng-move-active,
+		&.ng-enter.ng-enter-active {
+	  		opacity:1;
+		}
+	}
+}
+
+.board-panel {
+	overflow: hidden;
+}
+
+.board {
+	float: left;
+	background-color: #333333;
+	position: relative;
+}
+
+.cell-wrapper {
+	position: absolute;
+}
+
+.cell {
+	padding: 2px;
+	height: 100%;
+
+	@for $i from 1 through length($levels) {
+	    &.level-#{$i} {
+	        background-color: rgba(nth($levels, $i), 1);
+	    }
+	}
+}
+
+span.number {
+	position: absolute;
+	background-color: brown;
+	border-radius: 100%;
+	padding: 0.2em 0.1em 0.1em 0.1em;
+	width: 1.5em;
+	height: 1.5em;
+	text-align: center;
+	border: 1px solid wheat;
+	color: wheat;
+}
+
+.cell-inner {
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+	background-image: url('../images/cell.jpeg');
+	background-size: cover;
+
+	.vertical & {
+		background-position: 40%;
+
+	}
+
+	span.number {
+		bottom: 0em;
+		right: 0.6em;
+	}
+}
+
+canvas {
+	@for $i from 1 through length($levels) {
+	    &.level-#{$i} {
+	        background-color: rgba(nth($levels, $i), 1);
+	    }
+	}
+
+	& + span.rotation-0, & + span.rotation-4 {
+		bottom: 0.5em;
+		right: 3em;
+	}
+
+	& + span.rotation-1, & + span.rotation-5 {
+		bottom: 0.5em;
+		right: 0.6em;
+	}
+
+	& + span.rotation-2 {
+		bottom: 3em;
+		right: 0.5em;
+	}
+
+	& + span.rotation-3 {
+		bottom: 2.8em;
+		right: 5.8em;
+	}
+}
+
+.player {
+	position: absolute;
+	float: left;
+
+	&.slow {
+		transition: all 0.7s ease-out;
+	}
+	&.medium {
+		transition: all 0.5s ease-out;	
+	}
+	&.fast {
+		transition: all 0.3s ease-out;	
+	}
+}
+
+div.gender-male {
+	background-image: url('../images/male-shadow.png');
+	width: 2em;
+	height: 2.5em;
+	background-size: cover;
+}
+
+div.gender-female {
+	background-image: url('../images/female-shadow.png');
+	height: 2.5em;
+	width: 1.5em;
+	background-size: cover;
+}

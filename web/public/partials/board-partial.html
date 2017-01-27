@@ -1,35 +1,34 @@
-<div class="text-center md-padding">Home Page</div>
+<md-content class="md-padding">
+	<div layout="row" layout-xs="column">
+		<md-content flex class="players-panel">
+		    <md-toolbar class="md-hue-2">
+		      <div class="md-toolbar-tools">
+		        <h2>
+		          <span>Players</span>
+		        </h2>
+		      </div>
+		    </md-toolbar>
 
-<md-content>
-    <md-toolbar class="md-hue-2">
-      <div class="md-toolbar-tools">
-        <h2>
-          <span>Players</span>
-        </h2>
-      </div>
-    </md-toolbar>
+		    <div layout="row" layout-xs="column">
+		    	<player-info class="player-info" ng-repeat="player in players" player="player" advance="advance(n)"></player-info>
+			</div>
+		</md-content>
+		<md-content flex class="board-panel">
+		    <md-toolbar class="md-hue-2">
+		      <div class="md-toolbar-tools">
+		        <h2>
+		          <span>Board</span>
+		        </h2>
+		      </div>
+		    </md-toolbar>
 
-    <div layout="row" layout-xs="column" class="payers">
-    	<div ng-repeat="player in players" flex>
-    		Nombre: {{player.name}}<br/>
-    		Prendas: {{player.nitems}}<br/>
-    		<div class="player gender-{{player.gender}}"></div><br/><br/>
-    	</div>
+		    <div id="board">
+				<div class="board" style="width: {{board.parameters.width}}px; height: {{board.parameters.width}}px; font-size: {{board.parameters.fontSize}}em; left: {{board.parameters.left}}px">
+					<board-cell ng-repeat="cell in board.cells" cell="cell" completed="nextTurn()"></board-cell>
+					<board-player ng-repeat="player in players" player="player" speed="movement.speed"></board-player>
+				</div>
+			</div>
+		</md-content>
 	</div>
+	<span ng-click="movement.start()">Start</span>
 </md-content>
-    <md-toolbar class="md-hue-2">
-      <div class="md-toolbar-tools">
-        <h2>
-          <span>Board</span>
-        </h2>
-      </div>
-    </md-toolbar>
-
-	<div class="board" id="board" style="width: {{board.parameters.width}}px; height: {{board.parameters.width}}px; font-size: {{board.parameters.fontSize}}em; left: {{board.parameters.left}}px">
-		<board-cell ng-repeat="cell in board.cells" cell="cell"></board-cell>
-		<board-player player="players[0]" speed="movement.speed"></board-player>
-		<board-player player="players[1]" speed="movement.speed"></board-player>
-	</div>
-</md-content>
-<input name="cells2Advance" ng-model="offset" type="number"/>
-<button ng-click="movement.advance()">Advance</button>

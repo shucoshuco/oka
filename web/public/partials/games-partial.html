@@ -1,0 +1,32 @@
+<md-content class="md-padding">
+
+	<div layout="row" ng-controller="gamesController">
+		<md-sidenav md-component-id="left" class="md-sidenav-left" md-is-locked-open="$mdMedia('gt-md')">
+			<md-toolbar>
+				<h1 class="md-toolbar-tools">Lista de juegos</h1>
+			</md-toolbar>
+			<md-content>
+				<md-list flex>
+					<md-subheader class="md-no-sticky">Juegos disponibles</md-subheader>
+					<md-list-item ng-repeat-start="game in games" class="md-3-line md-long-text">
+						<img ng-src="{{game.image}}" class="md-avatar" alt="{{game.name}}" />
+						<div class="md-list-item-text" ng-click="go(game.link)">
+							<h3>{{ game.name }}</h3>
+							<p>
+								{{ game.description.join('') }}
+							</p>
+						</div>
+					</md-list-item>
+					<md-divider ng-repeat-end></md-divider>
+				</md-list>
+			</md-content>
+		</md-sidenav>
+
+		<md-content class="md-padding">
+			Center Content
+			<md-button ng-click="openLeftMenu()">
+				Open Left Menu
+			</md-button>
+		</md-content>
+	</div>
+</md-content>

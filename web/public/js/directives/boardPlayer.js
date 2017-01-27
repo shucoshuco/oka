@@ -2,13 +2,22 @@
 	app.directive('boardPlayer', function() {
 		return {
 			restrict: 'E',
-			template: '<div class="player gender-{{player.gender}} {{speed}}"></div>',
+			template: '<div class="player gender-{{player.gender}} '
+						+ '{{speed}} hidden"></div>',
 			replace: true,
 			scope: {
 				player: '=',
 				speed: '=',
 			},
 			link: function($scope, element, attrs, controller) {
+				element.css('display: none;');
+				$scope.$watch('player.visible', function(value) {
+					if (value) {
+						element.removeClass('hidden');
+					} else {
+						element.addClass('hidden');
+					}
+				});
 				$scope.$watch('player.top', function(value, old) {
 					element.css('top', '' + (value - element[0].offsetHeight / 2) + 'px');
 				});

@@ -1,0 +1,16 @@
+<div class="md-primary">
+	<div class="main">
+		<div class="name">{{player.name}}</div>
+		<div class="player-type gender-{{player.gender}}"></div>
+	</div>
+	<div class="main">
+		<ul class="clothes-container gender-{{player.gender}}" ng-show="player.nitems > 0">
+			<li class="animate-repeat" ng-repeat="clothes in getNumber(player.nitems) track by $index">
+			</li>
+		</ul>
+		<div class="nude gender-{{player.gender}}" ng-show="player.nitems <= 0"></div>
+	</div>
+	<div class="main">
+		<dice advance="advance(n)" player="player"></dice>
+	</div>
+</md-panel>

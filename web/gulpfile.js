@@ -16,7 +16,7 @@ var Server = require('karma').Server;
 
 gulp.task('default', ['serve']);
 
-gulp.task('init', ['lint', 'sass', 'bower', 'js', 'uglify-js', 'image', 'image-min', 'html', 'index']);
+gulp.task('init', ['lint', 'sass', 'bower', 'js', 'uglify-js', 'image', 'html', 'index']);
 
 gulp.task('lint', () => {
     // ESLint ignores files with "node_modules" paths.

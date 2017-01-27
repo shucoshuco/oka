@@ -6,6 +6,7 @@
 			replace: true,
 			scope: {
 				cell: '=',
+				completed: '&',
 			},
 			link: function($scope, element, attrs, controller) {
 				if ($scope.cell.corner) {
@@ -119,15 +120,11 @@
 						templateUrl: 'partials/action-partial.html',
 						parent: angular.element(document.body),
 						targetEvent: ev,
-						clickOutsideToClose: true,
 						// Only for -xs, -sm breakpoints.
 						fullscreen: $scope.customFullscreen,
 					})
-					.then(function(answer) {
-						$scope.status =
-							'You said the information was "' + answer + '".';
-					}, function() {
-						$scope.status = 'You cancelled the dialog.';
+					.then(function() {
+						$scope.completed({});
 					});
 				};
 
@@ -139,17 +136,14 @@
 				function DialogController($scope, $mdDialog) {
 					$scope.hide = function() {
 						$mdDialog.hide();
-						$scope.cell.selected = false;
 					};
 
 					$scope.cancel = function() {
 						$mdDialog.cancel();
-						$scope.cell.selected = false;
 					};
 
-					$scope.answer = function(answer) {
-						$mdDialog.hide(answer);
-						$scope.cell.selected = false;
+					$scope.done = function() {
+						$mdDialog.hide();
 					};
 				}
 			},

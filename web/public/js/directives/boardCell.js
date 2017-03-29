@@ -1,5 +1,6 @@
 (function(app) {
-	app.directive('boardCell', ['$mdDialog', function($mdDialog) {
+	app.directive('boardCell', ['$mdDialog', 'cellImageFilter', 'GameApi',
+	function($mdDialog, cellImageFilter, GameApi) {
 		return {
 			templateUrl: 'partials/directives/cell-template.html',
 			restrict: 'E',
@@ -14,12 +15,12 @@
 									+ '<span class="number rotation-'
 									+ $scope.cell.rotation
 									+ '" ng-click="showAdvanced($event)">'
-									+ $scope.cell.number
+									+ $scope.cell.position
 									+ '</span>');
 
 					let c = element.children()[0];
 					let image = document.createElement('img');
-					image.src = '/public/images/cell.jpeg';
+					image.src = cellImageFilter($scope.cell);
 
 					let draw = function() {
 						let size = Math.max($scope.cell.width, $scope.cell.height);
@@ -57,8 +58,8 @@
 						}
 
 						let levels = [
-							'#FFFFFF', '#86E25E', '#6DDB3E',
-							'#56D51F', '#0A6400',
+							'#000000', '#FFFFFF', '#FFDAD9',
+							'#FF6D69', '#CC5754', '#AC1D1E',
 						];
 
 						context.beginPath();
@@ -66,8 +67,6 @@
 						context.lineTo(cPoints[1].x, cPoints[1].y);
 						context.lineTo(cPoints[2].x, cPoints[2].y);
 						context.closePath();
-						context.fillStyle = levels[$scope.cell.level - 1];
-						context.fill();
 
 						context.save();
 						context.beginPath();
@@ -82,9 +81,11 @@
 						context.quadraticCurveTo(cPoints[11].x, cPoints[11].y,
 												cPoints[3].x, cPoints[3].y);
 						context.closePath();
+						context.fillStyle = levels[$scope.cell.level];
+						context.fill();
 						context.clip();
 
-						context.drawImage(image, -size / 2, 0, size * 300 / 168, size);
+						context.drawImage(image, 0, 0, size, size);
 					};
 
 					image.onload = draw;
@@ -100,13 +101,16 @@
 
 				$scope.$watch('cell.selected', function(value) {
 					if (value) {
-						let event = new MouseEvent('click', {
+						let event = new CustomEvent('click', {
 													'view': window,
 													'bubbles': true,
 													'cancelable': true,
 						});
 						element.bind('click', function(ev) {
-							$scope.showAdvanced(ev);
+							let id = $scope.cell.oka ? 'oka' : $scope.cell.id;
+							let cellDetails = GameApi.cell({id: id}, function() {
+								$scope.showAdvanced(ev, cellDetails, $scope.cell.position);
+							});
 						});
 						element[0].dispatchEvent(event);
 						element.unbind('click');
@@ -114,7 +118,8 @@
 					}
 				});
 
-				$scope.showAdvanced = function(ev) {
+				$scope.showAdvanced = function(ev, cell, position) {
+					alert('Yepp');
 					$mdDialog.show({
 						controller: DialogController,
 						templateUrl: 'partials/action-partial.html',
@@ -122,6 +127,10 @@
 						targetEvent: ev,
 						// Only for -xs, -sm breakpoints.
 						fullscreen: $scope.customFullscreen,
+						locals: {
+							cell: cell,
+							position: position,
+						},
 					})
 					.then(function() {
 						$scope.completed({});
@@ -132,8 +141,15 @@
 				 * Controller used to manage dialgos.
 				 * @param {Object} $scope Scope of the controler
 				 * @param {Object} $mdDialog Injection of $mdDialog object
+				 * @param {Object} cell Cell selected
+				 * @param {Object} position Cell position
 				 */
-				function DialogController($scope, $mdDialog) {
+				function DialogController($scope, $mdDialog, cell, position) {
+					alert('Yepp2' + cell + ' - ' + position);
+
+					$scope.cell = cell;
+					$scope.position = position;
+
 					$scope.hide = function() {
 						$mdDialog.hide();
 					};

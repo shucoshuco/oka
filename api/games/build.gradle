@@ -1,5 +1,0 @@
-dependencies {
-    compile 'org.springframework.data:spring-data-mongodb:1.9.5.RELEASE',
-    		'com.netflix.feign:feign-core:8.18.0',
-    		'com.netflix.feign:feign-slf4j:8.18.0'
-}

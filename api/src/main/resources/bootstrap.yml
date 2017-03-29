@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: oka
+  data:
+    mongodb:
+      database: test
+    
+server:
+  port: 8080
+
+logging:
+  level:
+    es:
+      fpg: DEBUG

@@ -1,56 +1,37 @@
 buildscript {
-	repositories {
-	    mavenCentral()
-	}
+    repositories {
+        mavenCentral()
+    }
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
-    }
-}
-
-subprojects {
-	
-	apply plugin: 'java'
-
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
-
-	repositories {
-	    mavenCentral()
-	}
-	
-	buildscript {
-		repositories {
-		    mavenCentral()
-		}
-	}
-	
-	apply plugin: "io.spring.dependency-management"
-	
-	dependencyManagement {
-	     imports {
-	          mavenBom 'org.springframework.cloud:spring-cloud-netflix:1.2.3.RELEASE'
-	     }
-	}
-	
-	dependencies {
-	    compile 'org.slf4j:slf4j-api:1.7.21',
-	    		'org.projectlombok:lombok:1.16.6'
-
-	    testCompile 'junit:junit:4.12',
-	    			'org.mockito:mockito-all:1.10.19'
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE")
 	}
 }
 
-configure(subprojects.findAll {it.name != 'eureka-server'}) {
-	dependencies {
-		compile 'org.springframework.cloud:spring-cloud-starter-eureka',
-				'org.springframework.cloud:spring-cloud-starter-hystrix',
-				'org.springframework.cloud:spring-cloud-starter-hystrix-dashboard'
-	}    
+plugins {
+    id "org.springframework.boot" version "1.5.1.RELEASE"
+    id "eclipse"
+    id "eclipse-wtp"
+    id "java"
 }
 
-configure(subprojects.findAll {!it.name.endsWith('-server')}) {
-	dependencies {
-		compile 'org.springframework.cloud:spring-cloud-starter-config'
-	}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21',
+            'org.projectlombok:lombok',
+            'org.springframework.boot:spring-boot-starter-web',
+    		'org.springframework.data:spring-data-mongodb',
+    		
+    		'org.apache.commons:commons-lang3:3.5',
+       		'org.apache.commons:commons-collections4:4.1'
+    		
+
+    testCompile 'junit:junit',
+                'org.mockito:mockito-all:1.10.19'
 }

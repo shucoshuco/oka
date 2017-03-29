@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: cells
-  cloud:
-    config:
-      uri: http://localhost:8888
-    
-server:
-  port: 8082

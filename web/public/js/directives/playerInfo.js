@@ -5,7 +5,6 @@
 			templateUrl: 'partials/directives/player-info.html',
 			scope: {
 				player: '=',
-				advance: '&',
 			},
 			link: function($scope, element, attrs, controller) {
 				$scope.getNumber = function(num) {

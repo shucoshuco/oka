@@ -1,16 +1,19 @@
-<div class="md-primary">
-	<div class="main">
-		<div class="name">{{player.name}}</div>
-		<div class="player-type gender-{{player.gender}}"></div>
-	</div>
-	<div class="main">
-		<ul class="clothes-container gender-{{player.gender}}" ng-show="player.nitems > 0">
-			<li class="animate-repeat" ng-repeat="clothes in getNumber(player.nitems) track by $index">
-			</li>
-		</ul>
-		<div class="nude gender-{{player.gender}}" ng-show="player.nitems <= 0"></div>
-	</div>
-	<div class="main">
-		<dice advance="advance(n)" player="player"></dice>
-	</div>
-</md-panel>
+<div class="player-info">
+    <img class="player-gender" src="public/images/{{player.model.gender | lowercase}}.png" alt="{{player.model.gender}}"></img>
+    <div class="player-names" hide-xs>
+        <span class="player-name">{{player.model.name}}</span>
+        <span class="player-alias" hide-md>{{player.model.alias}}</span>
+    </div>
+    <div class="clothes">
+        <div class="counter" hide-xl hide-lg ng-show="{{player.model.nitems > 0}}">
+            <img class="player-clothes" ng-src="public/images/{{player.model.gender | lowercase}}-clothes.png" alt="Clothes"></img>
+            <span>x{{player.model.nitems}}</span>
+        </div>
+        <div hide-xs hide-md hide-sm>
+            <ul class="clothes-container gender-{{player.model.gender}}" ng-show="player.model.nitems > 0">
+                <li class="animate-repeat gender-{{player.model.gender | lowercase}}" ng-repeat="clothes in getNumber(player.model.nitems) track by $index">
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

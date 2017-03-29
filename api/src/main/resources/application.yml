@@ -1,0 +1,53 @@
+cells:
+  cell:
+    oka:
+      title: OKA
+      description: Striptease
+      imageUrl: /images/oka.png
+  default:
+    board:
+      ncells: 69
+      dice: 6
+      okaGap: 4
+      levels:
+        - 14
+        - 14
+        - 14
+        - 14
+        - 13
+    player:
+      -
+        name: Player 1
+        gender: MALE
+        position: 0
+        nitems: 5
+      -
+        name: Player 2
+        gender: FEMALE
+        position: 0
+        nitems: 5
+
+games:
+  default:
+    board:
+      ncells: 69
+      dice: 6
+      okaGap: 8
+      levels: 
+        - 14
+        - 14
+        - 14
+        - 14
+        - 13
+    players:
+      -
+        name: Player1
+        alias: Black&Decker
+        gender: MALE
+        nitems: 5
+      -
+        name: Player2
+        alias: Naughty Little girl
+        gender: FEMALE
+        nitems: 5      
+        

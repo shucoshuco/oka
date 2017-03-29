@@ -1,4 +1,9 @@
-$dice-width: 2em;
+$dice-width: 3em;
+
+@media screen and (max-width: 399px) {
+	$dice-width: 2em;
+}
+
 $half-dice-width: $dice-width / 2;
 $quarter-dice-width: $dice-width / 4;
 $double-dice-width: $dice-width * 2;
@@ -20,13 +25,12 @@ $dot-long: $dice-width * 3 / 4 - $dot-width / 2;
 }
 @keyframes drop {
 	 0% {transform: translateX(0px) translateY(0) rotateX(0deg) rotateY(0) rotateZ(0) scale(1.3, .1.3);}
-	 50% {transform: translateX(-5px) translateY(-35px) rotateX(900deg) rotateY(0) rotateZ(0) scale(1.6, 1.6);}
-	 100% {transform: translateX(-10px) translateY(-10px) rotateX(1800deg) rotateY(0) rotateZ(0) scale(2, 2);}
+	 50% {transform: translateX(0px) translateY(-35px) rotateX(900deg) rotateY(0) rotateZ(0) scale(1.6, 1.6);}
+	 100% {transform: translateX(0px) translateY(-0px) rotateX(1800deg) rotateY(0) rotateZ(0) scale(2, 2);}
 }
 #dice {
-	position: absolute;
-	right: 1em;
-	bottom: 1em;
+	margin-left: auto;
+	margin-right: auto;
 	width: $dice-width;
 	height: $dice-width;
 	transform-style: preserve-3d;
@@ -37,11 +41,7 @@ $dot-long: $dice-width * 3 / 4 - $dot-width / 2;
 		cursor: pointer;
 	}
 	&.drop {
-		animation: drop 2s linear;
-	}
-	&.in-turn {
-		animation: spin 50s infinite linear;
-		cursor: pointer;
+		animation: drop 2.5s linear;
 	}
 
 	.cover, .inner {
@@ -103,22 +103,22 @@ $dot-long: $dice-width * 3 / 4 - $dot-width / 2;
 	}
 
 	&.one {
-		transform: translateX(-10px) translateY(-10px) scale(2, 2) ;
+		transform: scale(2, 2) ;
 	}	
 	&.two {
-		transform: translateX(-10px) translateY(-10px) scale(2, 2) rotateX(-90deg);
+		transform: translateX(0px) translateY(0px) scale(2, 2) rotateX(-90deg);
 	}
 	&.three {
-		transform: translateX(-10px) translateY(-10px) scale(2, 2) rotateY(-90deg);
+		transform: translateX(0px) translateY(0px) scale(2, 2) rotateY(-90deg);
 	}
 	&.four {
-		transform: translateX(-10px) translateY(-10px) scale(2, 2) rotateY(90deg);
+		transform: translateX(0px) translateY(0px) scale(2, 2) rotateY(90deg);
 	}
 	&.five {
-		transform: translateX(-10px) translateY(-10px) scale(2, 2) rotateX(90deg);
+		transform: translateX(0px) translateY(0px) scale(2, 2) rotateX(90deg);
 	}
 	&.six {
-		transform: translateX(-10px) translateY(-10px) scale(2, 2) rotateX(180deg);
+		transform: translateX(0px) translateY(0px) scale(2, 2) rotateX(180deg);
 	}	
 }
 .side {

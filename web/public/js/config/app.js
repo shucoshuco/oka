@@ -1,5 +1,6 @@
 let web = angular.module('web',
-	['ngMaterial', 'ngAnimate', 'ngMessages', 'ngAria', 'ui.router']);
+	['ngMaterial', 'ngAnimate', 'ngMessages', 'ngAria', 'ui.router',
+		'ngResource']);
 
 (function(app) {
 	app.config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider',
@@ -20,8 +21,8 @@ let web = angular.module('web',
 				controller: 'BoardController',
 			});
 			$mdThemingProvider.theme('default')
-				.primaryPalette('deep-orange')
-				.accentPalette('indigo')
+				.primaryPalette('indigo')
+				.accentPalette('deep-orange')
 				.warnPalette('red');
 		},
 	]);

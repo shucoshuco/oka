@@ -1,19 +1,19 @@
 (function(app) {
 	app.controller('BoardController',
-		['$scope', '$compile', '$timeout', '$window',
-		function($scope, $compile, $timeout, $window) {
+		['$scope', '$compile', '$timeout', '$window', 'GameApi',
+		function($scope, $compile, $timeout, $window, GameApi) {
+			$scope.loading = true;
+
 			let initialWidth = function() {
-				let board = document.getElementById('board');
-				let initialWidth = board.clientWidth / 2;
-				initialWidth = Math.max(initialWidth, 320);
+				let initialWidth = Math.min(screen.width * 0.7, screen.height * 0.9);
+				initialWidth = Math.max(initialWidth, 340);
 				return initialWidth - initialWidth * 0.05;
 			};
 
-			let ncells = 69;
-			let n1stCell = Math.floor(ncells / 15);
 			let timeoutId;
 
-			let calculateBoardParameters = function(initialWidth, ncells, n1stCell) {
+			let calculateBoardParameters = function(initialWidth, ncells) {
+				let n1stCell = Math.floor(ncells / 15);
 				let virtualCells = ncells + n1stCell + Math.floor(ncells / 10);
 
 				// b^2 = w * h * n
@@ -36,7 +36,6 @@
 
 				return {
 					width: finalWidth,
-					ncells: ncells,
 					n1stCell: n1stCell,
 					cellWidth: cellWidth,
 					cellHeight: cellHeight,
@@ -93,7 +92,7 @@
 				};
 			};
 
-			let updateCellPositions = function(cells, boardParameters) {
+			let updateBoard = function(cells, lastCell, boardParameters) {
 				let top = boardParameters.width - boardParameters.cellHeight;
 				let left = 0;
 
@@ -114,8 +113,8 @@
 				let step = state.next();
 				let offset = boardParameters.n1stCell;
 
-				for (let i = 1; i <= boardParameters.ncells; ) {
-					while (offset++ < perSide && i <= boardParameters.ncells) {
+				for (let i = 1; i < cells.length; ) {
+					while (offset++ < perSide && i < cells.length) {
 						if (offset === perSide - 1) {
 							top += step.fixLast.y * boardParameters.cellWidth;
 							left += step.fixLast.x * boardParameters.cellWidth;
@@ -140,57 +139,46 @@
 						}
 						i++;
 					}
-					perSide -= step.gap;
-					top += step.fixNext.y * boardParameters.cellWidth;
-					left += step.fixNext.x * boardParameters.cellWidth;
-					step = state.next();
-					offset = 0;
+					if (i < cells.length) {
+						perSide -= step.gap;
+						top += step.fixNext.y * boardParameters.cellWidth;
+						left += step.fixNext.x * boardParameters.cellWidth;
+						step = state.next();
+						offset = 0;
+						if (state.current == 0) {
+							lastCell.left = left;
+							lastCell.width = perSide * boardParameters.cellWidth;
+						}
+						if (state.current == 1) {
+							lastCell.width -= boardParameters.cellHeight;
+						}
+						if (state.current == 3) {
+							lastCell.top = top;
+							lastCell.height = perSide * boardParameters.cellWidth;
+						}
+					}
 				}
 			};
 
-			let createBoard = function(initialWidth, ncells, n1stCell) {
+			let createBoard = function(initialWidth, cells) {
 				let boardParameters =
-					calculateBoardParameters(initialWidth, ncells, n1stCell);
+					calculateBoardParameters(initialWidth, cells.length,
+												Math.floor(cells.length / 15));
 
-				let cells = [];
-				cells.push({
-					number: 0,
-					level: 1,
-					vertical: false,
+				cells.forEach(function(cell) {
+					cell.players = [];
+					cell.level = cell.oka ? 0 : cell.level + 1;
 				});
 
-				for (i = 0; i < ncells; i++) {
-					cells.push({
-						number: i + 1,
-						level: Math.floor(i / 15) + 1,
-					});
-				}
-
-				updateCellPositions(cells, boardParameters);
+				let lastCell = {};
+				updateBoard(cells, lastCell, boardParameters);
 
 				return {
-					playing: false,
 					parameters: boardParameters,
 					cells: cells,
+					lastCell: lastCell,
 				};
 			};
-
-			$scope.players = [
-				{
-					name: 'Félix',
-					gender: 'male',
-					nitems: 3,
-					position: 0,
-					index: 0,
-				},
-				{
-					name: 'Isabel',
-					gender: 'female',
-					nitems: 5,
-					position: 0,
-					index: 1,
-				},
-			];
 
 			let initializeMovement = function(board, players) {
 				let moving = false;
@@ -308,24 +296,24 @@
 							? innerCellTriangleOffset(cell.players.length, cell)
 							: innerCellOffset(cell.players.length, cell);
 						for (i = 0; i < cell.players.length; i++) {
-							cell.players[i].position = cell.number;
+							cell.players[i].boardPosition = cell.position;
 							cell.players[i].top = positions[i].top;
 							cell.players[i].left = positions[i].left;
 						}
 					}
 				};
 
-				let moveToPosition = function(player, position) {
+				let moveToPosition = function(player, position, callback) {
 					moving = true;
 
 					if (position === 0) {
 						$timeout.cancel(timeoutId);
 						moving = false;
-						board.cells[player.position].selected = true;
+						callback();
 						return;
 					}
 
-					let currentCell = player.position;
+					let currentCell = player.boardPosition;
 					let nextCell = currentCell + 1;
 					if (nextCell >= board.cells.length) {
 						$timeout.cancel(timeoutId);
@@ -346,65 +334,99 @@
 					}
 
 					timeoutId = $timeout(function() {
-						moveToPosition(player, position - 1);
+						moveToPosition(player, position - 1, callback);
 					}, speeds[speed]);
 				};
 
-				board.cells[0].players = [];
-				players.forEach(function(p) {
-					board.cells[0].players.push(p);
-				});
-
-				let turn = 0;
-
 				return {
 					speed: speed,
-					moveToPosition: moveToPosition,
 					refresh: function() {
 						board.cells.forEach(function(cell) {
 							updateCellPositions(cell);
 						});
 					},
-					start: function() {
-						if (!board.playing) {
-							updateCellPositions(board.cells[0]);
-							board.playing = true;
-							players.forEach(function(player) {
-								player.visible = true;
-							});
-							$scope.players[turn].turn = true;
-						}
-					},
-					advance: function(n) {
+					advance: function(mov) {
+						$scope.status.rolling = false;
 						if (!moving) {
-							moveToPosition($scope.players[turn], n);
+							moveToPosition(
+								$scope.players[mov.turn],
+								mov.dice,
+								function() {
+									$scope.board.cells[mov.player.position].selected = true;
+								}
+							);
+							$scope.lastMovement = mov;
 						}
 					},
+					updateCellPositions: updateCellPositions,
 					nextTurn: function() {
-						$scope.players[turn].turn = false;
-						$scope.players[turn].nitems -= 1;
-						turn += 1;
-						if (turn == $scope.players.length) {
-							turn = 0;
+						let changeTurn = function() {
+							$scope.players.forEach(function(p) {
+								p.turn = false;
+							});
+							$scope.players[$scope.lastMovement.turn].model
+								= $scope.lastMovement.player;
+							$scope.status = $scope.lastMovement.status;
+							let nextTurn = $scope.status.turn;
+							$scope.players[nextTurn].turn = true;
+							$scope.players[nextTurn].model =
+								$scope.status.players[nextTurn];
+							$scope.status.rolling = true;
+						};
+						if ($scope.lastMovement && $scope.lastMovement.jump) {
+							moveToPosition(
+								$scope.players[$scope.lastMovement.turn],
+								$scope.lastMovement.to - $scope.lastMovement.jumpInfo.to,
+								changeTurn
+							);
+						} else {
+							changeTurn();
 						}
-						$scope.players[turn].turn = true;
 					},
 				};
 			};
 
-			angular.element($window).bind('resize', function() {
+/*			angular.element($window).bind('resize', function() {
 				$scope.$apply(function() {
 					$scope.board.parameters =
 						calculateBoardParameters(initialWidth(), ncells, n1stCell);
-					updateCellPositions($scope.board.cells, $scope.board.parameters);
+					udpateBoard($scope.board.cells, $scope.board.parameters);
 					$scope.movement.refresh();
 				});
-			});
+			});*/
 
-			$scope.board = createBoard(initialWidth(), ncells, n1stCell);
-			$scope.movement = initializeMovement($scope.board, $scope.players);
-			$scope.advance = $scope.movement.advance;
-			$scope.nextTurn = $scope.movement.nextTurn;
+			$scope.$on('$viewContentLoaded', function load(event) {
+				let game = GameApi.get(function success() {
+					$scope.players = [];
+					$scope.status = game.status;
+					game.status.players.forEach(function(p) {
+						$scope.players.push({
+							boardPosition: p.position,
+							model: p,
+							visible: false,
+						});
+					});
+					$scope.board = createBoard(initialWidth(), game.board);
+					$scope.movement = initializeMovement($scope.board, $scope.players);
+					$scope.advance = $scope.movement.advance;
+					$scope.nextTurn = $scope.movement.nextTurn;
+					$scope.players.forEach(function(player) {
+						let cell = $scope.board.cells[player.model.position];
+						cell.players.push(player);
+						player.visible = true;
+						$scope.movement.updateCellPositions(cell);
+					});
+					$scope.players[$scope.status.turn].turn = true;
+					$scope.status.rolling = true;
+					$scope.loading = false;
+					$scope.minWidth = $scope.board.parameters.width;
+					$scope.status.rolling = true;
+				}, function error(error) {
+					$scope.errorLoading = error;
+					console.error('Error: ', error);
+					$scope.loading = false;
+				});
+			});
 		}]
 	);
 })(web);

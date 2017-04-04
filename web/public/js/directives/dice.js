@@ -5,6 +5,7 @@
 			templateUrl: 'partials/directives/dice.html',
 			replace: true,
 			scope: {
+				gameId: '=',
 				status: '=',
 				advance: '&',
 			},
@@ -14,7 +15,7 @@
 					element.addClass('drop');
 					element.unbind('click');
 					$timeout(function() {
-						let mov = GameApi.rollDice(function() {
+						let mov = GameApi.rollDice({id: $scope.gameId}, function() {
 							element.removeClass('drop');
 							switch(mov.dice) {
 								case 1: element.addClass('one'); break;

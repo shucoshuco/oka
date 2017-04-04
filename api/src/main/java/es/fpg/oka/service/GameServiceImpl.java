@@ -1,8 +1,10 @@
 package es.fpg.oka.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,15 @@ public class GameServiceImpl implements GameService {
 	private DefaultGameService defaultGame;
 	
 	@Override
+	public List<Game> userGames(long userId) {
+		log.debug("Looking for games of user {}", userId);
+		return repository.findByUserId(userId)
+				.stream()
+				.filter(g -> !g.getStatus().isFinished())
+				.collect(Collectors.toList());
+	}
+	
+	@Override
 	public Game getGame(String id) {
 		log.debug("Looking for game {}", id);
 		log.debug("Game: {}", repository.findOne(id));
@@ -47,7 +58,7 @@ public class GameServiceImpl implements GameService {
 		Game game = repository.findOne(id);
 		int dice = game == null ? defaultGame.getDefaultGameDice() : game.getDice();
 		int nCells = (RANDOM.nextInt(dice * 3) + 2) / 3;
-		return move(id, nCells);
+		return move(game, nCells);
 	}
 	
 	private int initializeDice(List<Cell> board, Integer dice) {
@@ -68,31 +79,38 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game createGame(List<Cell> board, List<Player> players, Integer dice) {
+	public Game createGame(long userId, List<Cell> board, List<Player> players, Integer dice) {
 		Game game = new Game();
+		game.setUserId(userId);
 		game.setBoard(initializeBoard(board));
 		game.initializeStatus(players);
 		game.setDice(initializeDice(board, dice));
+		game.setCreationDate(Instant.now());
+		game.setLastUpdate(Instant.now());
 		repository.insert(game);
 		return game;
 	}
 
 	@Override
-	public Game createGame(BoardConfiguration configuration, List<Player> players) {
-		return createGame(cellsService.getCells(configuration), players, configuration.getDice());
+	public Game createGame(BoardConfiguration configuration) {
+		return createGame(
+				configuration.getUserId(),
+				cellsService.getCells(configuration),
+				configuration.getPlayers(),
+				configuration.getDice());
 	}
 	
 	@Override
 	public Game createGame(long idConf) {
 		BoardConfiguration board = boardConfsService.getConfiguration(idConf);
-		return createGame(board, board.getPlayers());
+		return createGame(board);
 	}
 	
 	public Game createGameWithDefaultConfiguration(String idConf) {
 		log.info("Executing fallback method createGameWithDefaultConfiguration");
 		BoardConfiguration configuration = defaultGame.createDefaultBoardConfiguration();
-		List<Player> players = defaultGame.createDefaultPlayers();
-		return createGame(configuration, players);
+		configuration.setPlayers(defaultGame.createDefaultPlayers());
+		return createGame(configuration);
 	}
 	
 	@Override
@@ -100,8 +118,7 @@ public class GameServiceImpl implements GameService {
 		repository.delete(id);
 	}
 
-	private Movement move(String idGame, int nCells) {
-		Game game = getGame(idGame);
+	private Movement move(Game game, int nCells) {
 		if (game == null) {
 			return null;
 		}
@@ -138,6 +155,8 @@ public class GameServiceImpl implements GameService {
 		status.nextTurn();
 		movement.setNextTurn(status.getTurn());
 		movement.setStatus(status);
+		
+		game.setLastUpdate(Instant.now());
 		repository.save(game);
 		return movement;
 	}

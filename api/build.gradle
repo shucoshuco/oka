@@ -26,6 +26,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21',
             'org.projectlombok:lombok',
             'org.springframework.boot:spring-boot-starter-web',
+            'org.springframework.boot:spring-boot-starter-security',
     		'org.springframework.data:spring-data-mongodb',
     		
     		'org.apache.commons:commons-lang3:3.5',

@@ -1,7 +1,8 @@
 (function(app) {
 	app.controller('BoardController',
-		['$scope', '$compile', '$timeout', '$window', 'GameApi',
-		function($scope, $compile, $timeout, $window, GameApi) {
+		['$scope', '$compile', '$timeout', '$window', 'GameApi', '$stateParams',
+		function($scope, $compile, $timeout, $window, GameApi, $stateParams) {
+			$scope.gameId = $stateParams.boardId;
 			$scope.loading = true;
 
 			let initialWidth = function() {
@@ -348,9 +349,11 @@
 					advance: function(mov) {
 						$scope.status.rolling = false;
 						if (!moving) {
+							let currentPosition = $scope.players[mov.turn].boardPosition;
+							let cellsToMove = mov.to - currentPosition;
 							moveToPosition(
 								$scope.players[mov.turn],
-								mov.dice,
+								cellsToMove,
 								function() {
 									$scope.board.cells[mov.player.position].selected = true;
 								}
@@ -396,7 +399,7 @@
 			});*/
 
 			$scope.$on('$viewContentLoaded', function load(event) {
-				let game = GameApi.get(function success() {
+				let game = GameApi.get({id: $scope.gameId}, function success() {
 					$scope.players = [];
 					$scope.status = game.status;
 					game.status.players.forEach(function(p) {

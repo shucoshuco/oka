@@ -1,5 +1,8 @@
 package es.fpg.oka.controller;
 
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +14,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.model.Cell;
 import es.fpg.oka.model.Game;
 import es.fpg.oka.model.GameStatus;
 import es.fpg.oka.model.Movement;
 import es.fpg.oka.service.GameService;
+import es.fpg.oka.service.UserService;
 
-@CrossOrigin(origins= {"http://localhost:3000", "http://192.168.1.104:3000"})
+@CrossOrigin(origins= {"http://localhost:3000", "*"})
 @RestController
 @RequestMapping("/games")
 public class GameController {
 
 	@Autowired
 	private GameService service;
+	
+	@Autowired
+	private UserService userService;
+	
+	@RequestMapping(value = "/users/{userId}")
+	public ResponseEntity<List<Game>> pendingUserGames(@PathVariable(name = "userId") long userId) {
+		List<Game> games = service.userGames(userId);
+		if (CollectionUtils.isEmpty(games) && userService.getUser(userId) == null) {
+			new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(games, HttpStatus.OK);
+	}
 	
 	@RequestMapping(value = "/{idGame}/roll-dice", method = RequestMethod.POST)
 	public ResponseEntity<Movement> rollDice(@PathVariable(name = "idGame") String idGame) {
@@ -64,18 +81,19 @@ public class GameController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 	}
 	
-	@RequestMapping(value = "/game/custom", method = RequestMethod.POST)
-	public Game createGame(@RequestBody CustomGame game) {
-		return service.createGame(game.getBoard(), game.getPlayers(), game.getDice());
+	@RequestMapping(value = "/game/create/{userId}/custom", method = RequestMethod.POST)
+	public Game createGame(@PathVariable(name = "userId") long userId, @RequestBody CustomGame game) {
+		return service.createGame(userId, game.getBoard(), game.getPlayers(), game.getDice());
 	}
 
-	@RequestMapping(value = "/game/configurable", method = RequestMethod.POST)
-	public Game createGame(@RequestBody ConfigurableGame game) {
-		return service.createGame(game.getConfiguration(), game.getPlayers());
+	@RequestMapping(value = "/game/create/{userId}/configurable", method = RequestMethod.POST)
+	public Game createGame(@PathVariable long userId, @RequestBody BoardConfiguration conf) {
+		conf.setUserId(userId);
+		return service.createGame(conf);
 	}
 
 	@CrossOrigin("*")
-	@RequestMapping(value = "/game/userconf", method = RequestMethod.POST)
+	@RequestMapping(value = "/game/create/userconf", method = RequestMethod.POST)
 	public Game createGame(@RequestParam(name = "idConf") long idConf) {
 		return service.createGame(idConf);
 	}

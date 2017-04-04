@@ -100,26 +100,29 @@
 				};
 
 				$scope.$watch('cell.selected', function(value) {
+					console.log('Watch cell.selected: ' + value);
 					if (value) {
-						let event = new CustomEvent('click', {
+						let event = new CustomEvent('tap', {
 													'view': window,
 													'bubbles': true,
 													'cancelable': true,
 						});
-						element.bind('click', function(ev) {
+						element.bind('tap', function(ev) {
+							console.log('Inside click listener...');
 							let id = $scope.cell.oka ? 'oka' : $scope.cell.id;
 							let cellDetails = GameApi.cell({id: id}, function() {
 								$scope.showAdvanced(ev, cellDetails, $scope.cell.position);
 							});
 						});
+						console.log('Dispatching event on element ' + element);
 						element[0].dispatchEvent(event);
-						element.unbind('click');
+						element.unbind('tap');
 						$scope.cell.selected = false;
 					}
 				});
 
 				$scope.showAdvanced = function(ev, cell, position) {
-					alert('Yepp');
+					console.log('In showAdvanced');
 					$mdDialog.show({
 						controller: DialogController,
 						templateUrl: 'partials/action-partial.html',
@@ -145,8 +148,7 @@
 				 * @param {Object} position Cell position
 				 */
 				function DialogController($scope, $mdDialog, cell, position) {
-					alert('Yepp2' + cell + ' - ' + position);
-
+					console.log('In DialogController');
 					$scope.cell = cell;
 					$scope.position = position;
 

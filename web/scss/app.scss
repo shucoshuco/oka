@@ -2,7 +2,7 @@ $break-small: 600px;
 $break-large: 1600px;
 
 body {
-	min-width: 300px;
+	min-width: 320px;
 }
 
 .cover {
@@ -73,4 +73,63 @@ body {
 
 .centered {
 	text-align: center;
+}
+
+.no-wrap {
+	white-space: no-wrap;
+}
+
+button.md-button.md-icon-button.remove {
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	margin: 0;
+
+	md-icon {
+		width: 48px;
+		height: 48px;		
+
+		svg {
+			width: 48px;
+			height: 48px;
+		}
+	}
+}
+
+form {
+	/* NOTE: Check the demo's HTML to see some additional RTL support CSS */
+	/* Setup animations similar to the ng-messages */
+	
+	.hint {
+		/* Position the hint */
+		position: absolute;
+		left: 2px;
+		right: auto;
+		bottom: 7px;
+		/* Copy styles from ng-messages */
+		font-size: 12px;
+		line-height: 14px;
+		transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+		/* Set our own color */
+		color: grey;
+	}
+
+	.hint.ng-hide, .hint.ng-enter, .hint.ng-leave.ng-leave-active {
+		bottom: 26px;
+		opacity: 0;
+	}
+
+	.hint.ng-leave, .hint.ng-enter.ng-enter-active {
+		bottom: 7px;
+		opacity: 1;
+	}
+}
+
+.two-columns {
+
+	flex-wrap: wrap;
+
+	& > .flex {
+		flex: 1 0 50%;
+	}
 }

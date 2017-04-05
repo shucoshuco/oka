@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.service.BoardConfigurationService;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin({"http://localhost:3000", "*"})
 @RestController
 @RequestMapping("/users/confs")
 public class BoardConfigurationController {

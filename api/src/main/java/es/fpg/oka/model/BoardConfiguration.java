@@ -17,7 +17,7 @@ public class BoardConfiguration {
 	private long id;
 	
 	@Getter @Setter
-	private String userId;
+	private long userId;
 	
 	@Getter @Setter
 	private String name;

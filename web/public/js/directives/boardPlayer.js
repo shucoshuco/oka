@@ -10,12 +10,20 @@
 				speed: '=',
 			},
 			link: function($scope, element, attrs, controller) {
+				let offsetWidth = function offsetWidth() {
+					return (element[0].offsetWidth || 30) / 2;
+				};
+
+				let offsetHeight = function offsetHeight() {
+					return (element[0].offsetWidth || 30) / 2;
+				};
+
 				$scope.$watch('player.top', function(value, old) {
-					element.css('top', '' + (value - element[0].offsetHeight / 2) + 'px');
+					element.css('top', '' + (value - offsetHeight()) + 'px');
 				});
 
 				$scope.$watch('player.left', function(value, old) {
-					element.css('left', '' + (value - element[0].offsetWidth / 2) + 'px');
+					element.css('left', '' + (value - offsetWidth()) + 'px');
 				});
 			},
 		};

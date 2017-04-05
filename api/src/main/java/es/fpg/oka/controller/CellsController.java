@@ -15,7 +15,7 @@ import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.model.Cell;
 import es.fpg.oka.service.CellService;
 
-@CrossOrigin(origins= {"http://localhost:3000", "http://192.168.1.104:3000"})
+@CrossOrigin(origins= {"http://localhost:3000", "*"})
 @RestController
 @RequestMapping("/cells")
 public class CellsController {

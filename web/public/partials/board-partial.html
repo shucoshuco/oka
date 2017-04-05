@@ -2,6 +2,7 @@
 	<h2>OKASutra</h2>
 	<p>El clásico juego de la oca adaptado a las relaciones de pareja.</p>
 	<md-divider></md-divider>
+	<h4>Juego: {{gameId}}</h4>
 	<div class="loading" ng-show="loading">
 		<md-progress-circular></md-progress-circular>
 		Loading game...
@@ -11,10 +12,6 @@
 	</div>
 	<div ng-show="!loading && !errorLoading" layout="row" layout-xs="column" layout-sm="column" class="oka-wrapper">
 		<md-content flex class="players-panel">
-	        <h4>
-	          <span>Players</span>
-	        </h4>
-
 	        <div layout="column" layout-sm="row" layout-xs="row">
 			    <div flex layout="column" class="players-container turn">
 			    	<player-info class="player-info" ng-repeat="player in players" player="player" advance="advance(mov)"></player-info>
@@ -22,16 +19,12 @@
 				<div flex>
 					<div class="dice-wrapper">
 						<p class="centered">{{status.players[status.turn].name}}, your turn</p>
-						<dice advance="advance(mov)" status="status"></dice>
+						<dice advance="advance(mov)" status="status" game-id="gameId"></dice>
 					</div>
 				</div>
 			</div>
 		</md-content>
 		<md-content class="board-panel">
-	        <h4>
-	          <span>Board</span>
-	        </h4>
-
 		    <div id="board">
 				<div class="board" style="width: {{board.parameters.width}}px; height: {{board.parameters.width}}px; font-size: {{board.parameters.fontSize}}em; left: {{board.parameters.left}}px">
 					<board-cell ng-repeat="cell in board.cells" cell="cell" completed="nextTurn()"></board-cell>

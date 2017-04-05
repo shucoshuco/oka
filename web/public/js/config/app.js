@@ -7,16 +7,21 @@ let web = angular.module('web',
 		function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
 			$urlRouterProvider.otherwise('/');
 
-			$stateProvider.state('games', {
-				url: '/games',
-				templateUrl: 'partials/games-partial.html',
-				controller: 'gamesController',
-			}).state('start', {
+			$stateProvider
+			.state('start', {
 				url: '/',
 				templateUrl: 'partials/start-partial.html',
 				controller: 'StartController',
+			}).state('usergames', {
+				url: '/usergames',
+				templateUrl: 'partials/usergames-partial.html',
+				controller: 'usergamesController',
+			}).state('games', {
+				url: '/games',
+				templateUrl: 'partials/games-partial.html',
+				controller: 'gamesController',
 			}).state('board', {
-				url: '/board',
+				url: '/board/{boardId}',
 				templateUrl: 'partials/board-partial.html',
 				controller: 'BoardController',
 			});

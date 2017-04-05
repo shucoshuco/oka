@@ -71,8 +71,8 @@ gulp.task('serve', ['init'], function() {
 
 
 gulp.task('index', function() {
-    var target = gulp.src('./dev/index.html');
-    var sources = gulp.src(['./bower_components/**/*.js', './public/js/config/app.js', './public/js/factories/**/*.js', './public/js/services/**/*.js', './public/js/controllers/**/*.js', './public/js/filters/**/*.js', './public/js/directives/**/*.js', './bower_components/**/*.css', './public/css/**/*.css'], { read: false });
+    var target = gulp.src('./public/index.html');
+    var sources = gulp.src(['./bower_components/**/*.min.js', './public/js/config/app.js', './public/js/factories/**/*.js', './public/js/services/**/*.js', './public/js/controllers/**/*.js', './public/js/filters/**/*.js', './public/js/directives/**/*.js', './bower_components/**/*.min.css', './public/css/**/*.css'], { read: false });
 
     return target.pipe(inject(sources))
         .pipe(gulp.dest('./dev'))
@@ -155,7 +155,7 @@ gulp.task('uglify-js', function() {
 
 gulp.task('index:dist', function() {
     var target = gulp.src('./dist/index.html');
-    var sources = gulp.src(['./bower_components/**/*.js', './public/js/min/anonymous.min.js', './bower_components/**/*.css', './public/css/**/*.css'], { read: false });
+    var sources = gulp.src(['./bower_components/**/*.min.js', './public/js/min/anonymous.min.js', './bower_components/**/*.min.css', './public/css/**/*.css'], { read: false });
 
     return target.pipe(inject(sources))
         .pipe(gulp.dest('./dist'))

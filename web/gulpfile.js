@@ -13,6 +13,12 @@ var iife = require("gulp-iife");
 var cleanCSS = require('gulp-clean-css');
 var babel = require('gulp-babel');
 var Server = require('karma').Server;
+var argv = require('yargs').argv;
+
+console.log(argv);
+console.log(argv.censored);
+
+var imgDir = argv.c ? 'public/images/censored/' : 'public/images/normal/';
 
 gulp.task('default', ['serve']);
 
@@ -54,7 +60,7 @@ gulp.task('serve', ['init'], function() {
 
     gulp.watch('./scss/*.scss', ['sass-watch']);
 
-    gulp.watch('./public/images/*', ['image-watch']);
+    gulp.watch('./' + imgDir + '*', ['image-watch']);
 
     gulp.watch('./public/**/*.html', ['html-watch']);
 
@@ -80,7 +86,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('image', function() {
-    return gulp.src('./public/images/**/*')
+    return gulp.src('./' + imgDir + '**/*')
         .pipe(gulp.dest('./dev/public/images'))
         .pipe(gulp.dest('./dist/public/images'))
         .pipe(browserSync.stream());
@@ -131,9 +137,9 @@ gulp.task('js-watch', ['js', 'uglify-js', 'index', 'index:dist'], function(done)
 //DIST:
 
 gulp.task('image-min', function() {
-    gulp.src(['./public/**/*.png', './public/**/*.jpg', './public/**/*.gif', './public/**/*.jpeg'])
+    gulp.src(['./' + imgDir + '**/*.png', './public/**/*.jpg', './public/**/*.gif', './public/**/*.jpeg'])
         .pipe(imagemin())
-        .pipe(gulp.dest('./dist/public'));
+        .pipe(gulp.dest('./dist/public/images'));
 });
 
 gulp.task('uglify-js', function() {
@@ -181,7 +187,7 @@ gulp.task('serve:dist', ['dist:package'], function() {
 
     gulp.watch('./scss/*.scss', ['sass-watch']);
 
-    gulp.watch('./public/images/*', ['image-watch']);
+    gulp.watch('./' + imgDir + '*', ['image-watch']);
 
     gulp.watch('./public/**/*.html', ['html-watch']);
 

@@ -1,7 +1,7 @@
 {
-  "name": "generator-angular-material",
-  "version": "1.0.0",
-  "description": "Google Yeoman Angular Material Generator",
+  "name": "okamasutra-game",
+  "version": "0.0.1",
+  "description": "Okamasutra game",
   "main": "index.js",
   "scripts": {
     "test": "spec"
@@ -11,17 +11,10 @@
     "url": "git+https://github.com/iansawyerva/generator-angular-material.git"
   },
   "keywords": [
-    "Google",
-    "Angular",
-    "Material",
     "Yeoman"
   ],
-  "author": "Ian Sawyer",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/iansawyerva/generator-angular-material/issues"
-  },
-  "homepage": "https://github.com/iansawyerva/generator-angular-material#readme",
+  "author": "Felix Pandavenes",
+  "license": "Free",
   "devDependencies": {
     "angular-mocks": "^1.6.1",
     "browser-sync": "^2.18.5",
@@ -29,7 +22,7 @@
     "eslint": "^3.12.2",
     "eslint-config-google": "^0.7.1",
     "gulp": "^3.9.1",
-    "gulp-clean-css": "^2.3.2",
+    "gulp-clean-css": "^3.0.4",
     "gulp-concat": "^2.6.1",
     "gulp-eslint": "^3.0.1",
     "gulp-iife": "^0.3.0",
@@ -39,7 +32,7 @@
     "gulp-sass": "^3.0.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.8",
-    "gulp-babel": "^6.21.0",
+    "gulp-babel": "^6.1.2",
     "jasmine": "^2.4.1",
     "karma": "1.x || ^0.13.0",
     "karma-jasmine": "1.x || ^0.3.6",

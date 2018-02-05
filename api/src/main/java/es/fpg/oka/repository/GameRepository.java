@@ -8,5 +8,5 @@ import es.fpg.oka.model.Game;
 
 public interface GameRepository extends MongoRepository<Game, String> {
 
-	List<Game> findByUserId(long userId);
+	List<Game> findByUserId(String userId);
 }

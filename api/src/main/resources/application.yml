@@ -1,3 +1,8 @@
+security:
+  cors:
+    allowedOrigins: http://localhost:4200
+    allowedHeaders: '*'
+
 cells:
   cell:
     oka:
@@ -49,5 +54,12 @@ games:
         name: Player2
         alias: Naughty Little girl
         gender: FEMALE
-        nitems: 5      
-        
+        nitems: 5
+
+logging:
+  level:
+    root: WARN
+    es: DEBUG
+    org:
+      springframework:
+        security: DEBUG   

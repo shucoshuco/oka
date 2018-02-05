@@ -2,10 +2,13 @@ package es.fpg.oka.controller;
 
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,34 +17,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.fpg.oka.controller.bean.CustomGame;
 import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.model.Cell;
 import es.fpg.oka.model.Game;
 import es.fpg.oka.model.GameStatus;
 import es.fpg.oka.model.Movement;
 import es.fpg.oka.service.GameService;
-import es.fpg.oka.service.UserService;
 
-@CrossOrigin(origins= {"http://localhost:3000", "*"})
+@CrossOrigin(origins = "${security.cors.allowedOrigins}")
 @RestController
-@RequestMapping("/games")
+@RequestMapping("/games/user")
 public class GameController {
 
+	public final static String ANONYMOUS_GAME_SESSION_ATTRIBUTE_NAME = "anonymous-game";
+	
 	@Autowired
 	private GameService service;
 	
-	@Autowired
-	private UserService userService;
-	
-	@RequestMapping(value = "/users/{userId}")
-	public ResponseEntity<List<Game>> pendingUserGames(@PathVariable(name = "userId") long userId) {
-		List<Game> games = service.userGames(userId);
-		if (CollectionUtils.isEmpty(games) && userService.getUser(userId) == null) {
-			new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(games, HttpStatus.OK);
+	@RequestMapping(value = "")
+	@Secured("ROLE_USER")
+	public ResponseEntity<List<Game>> pendingUserGames() {
+		return new ResponseEntity<>(service.userGames(), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/{idGame}/roll-dice", method = RequestMethod.POST)
 	public ResponseEntity<Movement> rollDice(@PathVariable(name = "idGame") String idGame) {
 		Movement movement = service.rollDice(idGame);
@@ -81,23 +80,36 @@ public class GameController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 	}
 	
-	@RequestMapping(value = "/game/create/{userId}/custom", method = RequestMethod.POST)
-	public Game createGame(@PathVariable(name = "userId") long userId, @RequestBody CustomGame game) {
-		return service.createGame(userId, game.getBoard(), game.getPlayers(), game.getDice());
+	@RequestMapping(value = "/create/custom", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
+	public Game createGame(@RequestBody CustomGame game) {
+		return service.createGame(game.getBoard(), game.getPlayers(), game.getDice());
 	}
 
-	@RequestMapping(value = "/game/create/{userId}/configurable", method = RequestMethod.POST)
-	public Game createGame(@PathVariable long userId, @RequestBody BoardConfiguration conf) {
-		conf.setUserId(userId);
+	@RequestMapping(value = "/create/configurable", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
+	public Game createGame(@RequestBody BoardConfiguration conf) {
 		return service.createGame(conf);
 	}
 
-	@CrossOrigin("*")
-	@RequestMapping(value = "/game/create/userconf", method = RequestMethod.POST)
+	@RequestMapping(value = "/create/userconf", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
 	public Game createGame(@RequestParam(name = "idConf") long idConf) {
 		return service.createGame(idConf);
 	}
-	
+
+	@RequestMapping(value = "/create/anonymous", method = RequestMethod.POST)
+	public Game createAnonymousGame(HttpServletRequest request) {
+		Game game = service.createAnonymousGame();
+		HttpSession session = request.getSession();
+		String lastGame = (String) session.getAttribute(ANONYMOUS_GAME_SESSION_ATTRIBUTE_NAME);
+		if (lastGame != null) {
+			service.deleteGame(lastGame);
+		}
+		session.setAttribute(ANONYMOUS_GAME_SESSION_ATTRIBUTE_NAME, game.getId());
+		return game;
+	}
+
 	@RequestMapping(value = "/{idGame}", method = RequestMethod.DELETE)
 	public boolean deleteGame(@PathVariable(name = "idGame") String idGame) {
 		service.deleteGame(idGame);

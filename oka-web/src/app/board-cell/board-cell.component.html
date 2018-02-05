@@ -1,0 +1,11 @@
+<div class="cell-wrapper"
+     [style.width]="cell.width + 'px'"
+     [style.height]="cell.height + 'px'"
+     [style.top]="cell.top + 'px'"
+     [style.left]="cell.left + 'px'">
+  <div class="cell {{cell.vertical ? 'vertical' : 'horizontal'}} level-{{cell.level + 1}} {{cell.oka ? 'oka' : ''}}">
+    <div class="cell-inner" [style.background-image]="getUrl()">
+      <span class="number">{{cell.position}}</span>
+    </div>
+  </div>
+</div>

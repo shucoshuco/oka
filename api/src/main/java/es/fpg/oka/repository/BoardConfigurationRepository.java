@@ -8,5 +8,5 @@ import es.fpg.oka.model.BoardConfiguration;
 
 public interface BoardConfigurationRepository extends MongoRepository<BoardConfiguration, Long> {
 
-	public List<BoardConfiguration> findByUserId(long userId);
+	public List<BoardConfiguration> findByUserId(String userId);
 }

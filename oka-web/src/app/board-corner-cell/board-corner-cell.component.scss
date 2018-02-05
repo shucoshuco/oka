@@ -1,0 +1,69 @@
+@import "../common";
+
+.cell-wrapper {
+  position: absolute;
+  z-index: 20;
+}
+
+.cell {
+  padding: 2px;
+  height: 100%;
+  background-color: #333333;
+
+  @for $i from 1 through length($levels) {
+    &.level-#{$i - 1} .cell-inner {
+      background-color: rgba(nth($levels, $i), 1);
+    }
+    &.level-#{$i - 1}.oka .cell-inner {
+      background-color: rgba(nth($levels, 1), 1);
+    }
+  }
+}
+
+span.number {
+  position: absolute;
+  background-color: green;
+  border-radius: 100%;
+  padding: 0.2em 0.1em 0.1em 0.1em;
+  width: 1.5em;
+  height: 1.5em;
+  text-align: center;
+  border: 1px solid wheat;
+  color: wheat;
+
+  &.dialog {
+    padding: 0;
+    display: inline-block;
+    position: static;
+  }
+}
+
+canvas {
+
+  @for $i from 1 through length($levels) {
+    &.level-#{$i} {
+      background-color: rgba(nth($levels, $i), 1);
+    }
+  }
+
+  & + span.rotation-0, & + span.rotation-4 {
+    bottom: 0.5em;
+    right: 3em;
+  }
+
+  & + span.rotation-1, & + span.rotation-5 {
+    bottom: 0.5em;
+    right: 0.6em;
+  }
+
+  & + span.rotation-2 {
+    bottom: 3em;
+    right: 0.5em;
+  }
+
+  & + span.rotation-3 {
+    bottom: 2.8em;
+    right: 6.2em;
+  }
+}
+

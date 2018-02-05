@@ -27,10 +27,13 @@ dependencies {
             'org.projectlombok:lombok',
             'org.springframework.boot:spring-boot-starter-web',
             'org.springframework.boot:spring-boot-starter-security',
-    		'org.springframework.data:spring-data-mongodb',
+    		'org.springframework.boot:spring-boot-starter-data-mongodb',
     		
     		'org.apache.commons:commons-lang3:3.5',
-       		'org.apache.commons:commons-collections4:4.1'
+       		'org.apache.commons:commons-collections4:4.1',
+       		
+       		'com.fasterxml.jackson.datatype:jackson-datatype-jdk8',
+       		'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     		
 
     testCompile 'junit:junit',

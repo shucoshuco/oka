@@ -1,0 +1,30 @@
+.player {
+  background-repeat: no-repeat;
+  position: absolute;
+  float: left;
+  z-index: 30;
+
+  &.slow {
+    transition: all 0.7s ease-out;
+  }
+  &.medium {
+    transition: all 0.5s ease-out;
+  }
+  &.fast {
+    transition: all 0.3s ease-out;
+  }
+}
+
+div.gender-MALE {
+  background-image: url('/assets/normal/male-shadow.png');
+  height: 4.5em;
+  width: 3.5em;
+  background-size: cover;
+}
+
+div.gender-FEMALE {
+  background-image: url('/assets/normal/female-shadow.png');
+  height: 5em;
+  width: 3em;
+  background-size: cover;
+}

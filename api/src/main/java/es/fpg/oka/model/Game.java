@@ -17,7 +17,7 @@ public class Game {
 	private Instant creationDate;
 	private Instant lastUpdate;
 	
-	private long userId;
+	private String userId;
 	private int dice;
 	private List<Cell> board;
 	private GameStatus status;

@@ -1,4 +1,4 @@
-package es.fpg.oka.controller;
+package es.fpg.oka.controller.bean;
 
 import java.util.List;
 

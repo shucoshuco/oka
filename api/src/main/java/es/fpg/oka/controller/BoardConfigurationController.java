@@ -3,6 +3,7 @@ package es.fpg.oka.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,38 +14,46 @@ import org.springframework.web.bind.annotation.RestController;
 import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.service.BoardConfigurationService;
 
-@CrossOrigin({"http://localhost:3000", "*"})
+@CrossOrigin(origins = "${security.cors.allowedOrigins}")
 @RestController
-@RequestMapping("/users/confs")
+@RequestMapping("/config")
+@Secured("ROLE_USER")
 public class BoardConfigurationController {
 
 	@Autowired
 	private BoardConfigurationService service;
 	
-	@RequestMapping("/{idConf}")
-	public BoardConfiguration getUser(@PathVariable(name = "idConf") long idConf) {
+	@RequestMapping("/user/{idConf}")
+	@Secured("ROLE_USER")
+	public BoardConfiguration getCurrentUserConfiguration(@PathVariable(name = "idConf") long idConf) {
 		return service.getConfiguration(idConf);
 	}
-	
-	@RequestMapping(value = "", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/user", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
 	public BoardConfiguration createBoardConfiguration(@RequestBody BoardConfiguration conf) {
 		return service.insert(conf);
 	}
 
-	@RequestMapping(value = "/{idConf}", method = RequestMethod.PUT)
-	public BoardConfiguration updateBoardConfiguration(@PathVariable(name = "idConf") long idConf, @RequestBody BoardConfiguration conf) {
-		conf.setId(idConf);
+	@RequestMapping(value = "/user/{idConf}", method = RequestMethod.PUT)
+	@Secured("ROLE_USER")
+	public BoardConfiguration updateBoardConfiguration(
+			@PathVariable(name = "idConf") long idConf,
+			@RequestBody BoardConfiguration conf)
+	{
 		return service.update(conf);
 	}
 	
-	@RequestMapping(value = "/{idConf}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/user/{idConf}", method = RequestMethod.DELETE)
+	@Secured("ROLE_USER")
 	public boolean deleteBoardConfiguration(@PathVariable(name = "idConf") long idConf) {
 		service.delete(idConf);
 		return true;
 	}
 
-	@RequestMapping(value = "/user/{idUser}")
-	public List<BoardConfiguration> getUserConfigurations(@PathVariable(name = "idUser") long idUser) {
-		return service.getAllConfigurationsOfUser(idUser);
+	@RequestMapping(value = "/user")
+	@Secured("ROLE_USER")
+	public List<BoardConfiguration> getUserConfigurations() {
+		return service.getAllConfigurationsOfUser();
 	}
 }

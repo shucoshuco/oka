@@ -15,7 +15,7 @@ import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.model.Cell;
 import es.fpg.oka.service.CellService;
 
-@CrossOrigin(origins= {"http://localhost:3000", "*"})
+@CrossOrigin(origins = "${security.cors.allowedOrigins}")
 @RestController
 @RequestMapping("/cells")
 public class CellsController {
@@ -28,7 +28,7 @@ public class CellsController {
 		return service.getCells(configuration);
 	}
 	
-	@RequestMapping("/cells/{idCell}")
+	@RequestMapping("/{idCell}")
 	public ResponseEntity<Cell> cell(@PathVariable long idCell) {
 		Cell cell = service.getCell(idCell);
 		return cell == null
@@ -36,7 +36,7 @@ public class CellsController {
 				: new ResponseEntity<>(cell, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/cells/oka")
+	@RequestMapping("/oka")
 	public ResponseEntity<Cell> oka() {
 		Cell cell = service.getOka();
 		return cell == null

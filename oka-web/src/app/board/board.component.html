@@ -1,0 +1,39 @@
+  <h2>OKASutra</h2>
+  <p>El clásico juego de la oca adaptado a las relaciones de pareja.</p>
+  <h4>Juego: {{gameId}}</h4>
+  <div class="loading" *ngIf="loading">
+    Loading game...
+  </div>
+  <div *ngIf="errorLoading">
+    There was an error loading this game. Please, try again in a few minutes.
+  </div>
+  <button (onClick)="rollDice()">Start</button>
+  <app-dice [gameId]="gameId" (onRolled)="move($event)"></app-dice>
+  <div *ngIf="!loading && !errorLoading" layout="row"
+       layout-xs="column" layout-sm="column" class="oka-wrapper">
+    <div id="board">
+      <div flex layout="column" class="players-container turn">
+        <app-player-info class="player-info" *ngFor="let player of players" [player]="player"></app-player-info>
+      </div>
+      <div class="board" [style.width]="board.parameters.width + 'px'"
+                        [style.height]="board.parameters.width + 'px'"
+                        [style.font-size]="board.parameters.fontSize + 'em'"
+                        [style.left]="board.parameters.left + 'px'">
+        <ng-template ngFor let-cell [ngForOf]="board.cells">
+          <app-board-cell *ngIf="!cell.corner" [cell]="cell" (onCompleted)="nextTurn()"></app-board-cell>
+          <app-board-corner-cell *ngIf="cell.corner" [cell]="cell" (onCompleted)="nextTurn()"></app-board-corner-cell>
+        </ng-template>
+        <div class="last-cell"
+             [style.left]="board.lastCell.left + 'px'"
+             [style.top]="board.lastCell.top + 'px'"
+             [style.width]="board.lastCell.width + 'px'"
+             [style.height]="board.lastCell.height + 'px'"></div>
+
+      </div>
+      <app-board-player *ngFor="let player of players"
+                        [player]="player"
+                        [speed]="'fast'"
+                        [cells]="board.cells">
+      </app-board-player>
+    </div>
+  </div>

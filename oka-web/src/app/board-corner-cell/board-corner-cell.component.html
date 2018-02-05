@@ -1,0 +1,10 @@
+<div class="cell-wrapper"
+     [style.width]="cell.width + 'px'"
+     [style.height]="cell.height + 'px'"
+     [style.top]="cell.top + 'px'"
+     [style.left]="cell.left + 'px'">
+  <canvas></canvas>
+  <span class="number rotation-{{cell.rotation}}" ng-click="showAdvanced($event)">
+    {{cell.position}}
+  </span>
+</div>

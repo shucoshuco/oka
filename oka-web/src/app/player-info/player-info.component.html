@@ -1,0 +1,17 @@
+<div class="player-info {{player.turn ? 'turn' : ''}}">
+  <img class="player-gender" [src]="imageUrl" alt="{{player.gender}}"/>
+  <div class="player-names">
+    <span class="player-name">{{player.name}}</span>
+    <span class="player-alias">{{player.alias}}</span>
+  </div>
+  <div class="clothes">
+    <!--<div class="counter" hide-xl hide-lg *ngIf="player.nitems == 0">-->
+      <!--<img class="player-clothes" [src]="clothesUrl" alt="Clothes"/>-->
+      <!--<span>{{player.nitems}}</span>-->
+    <!--</div>-->
+    <ul class="clothes-container gender-{{player.gender}}" ng-show="player.model.nitems > 0">
+      <li class="animate-repeat gender-{{player.gender | lowercase}}" *ngFor="let clothes of getNumber(player.nitems)">
+      </li>
+    </ul>
+  </div>
+</div>

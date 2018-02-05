@@ -1,4 +1,4 @@
-package es.fpg.oka.service;
+package es.fpg.oka.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.model.Level;
 import es.fpg.oka.model.Player;
+import es.fpg.oka.service.DefaultData;
+import es.fpg.oka.service.DefaultGameService;
 
 @Service
 public class DefaultGameServiceImpl implements DefaultGameService {

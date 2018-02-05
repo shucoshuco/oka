@@ -1,4 +1,4 @@
-package es.fpg.oka.service;
+package es.fpg.oka.service.impl;
 
 import java.time.Instant;
 import java.util.List;
@@ -6,7 +6,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import es.fpg.oka.model.BoardConfiguration;
@@ -17,11 +21,16 @@ import es.fpg.oka.model.Movement;
 import es.fpg.oka.model.Movement.Jump;
 import es.fpg.oka.model.Player;
 import es.fpg.oka.repository.GameRepository;
+import es.fpg.oka.security.CustomPrincipal;
+import es.fpg.oka.service.BoardConfigurationService;
+import es.fpg.oka.service.CellService;
+import es.fpg.oka.service.DefaultGameService;
+import es.fpg.oka.service.GameService;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class GameServiceImpl implements GameService {
+public class GameServiceImpl extends SecuredServiceBase implements GameService {
 
 	private final static Random RANDOM = new Random();
 
@@ -37,8 +46,23 @@ public class GameServiceImpl implements GameService {
 	@Autowired
 	private DefaultGameService defaultGame;
 	
+	@Autowired
+	private AuthenticationTrustResolver authResolver;
+	
+	protected String getCurrentPrincipalOrAnonymousId() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return auth == null || authResolver.isAnonymous(auth)
+				? null
+				: ((CustomPrincipal) auth.getPrincipal()).getId();
+	}
+	
+	protected boolean validUserOrAnonymous(String userId) {
+		return StringUtils.equals(userId, getCurrentPrincipalOrAnonymousId());
+	}	
+	
 	@Override
-	public List<Game> userGames(long userId) {
+	public List<Game> userGames() {
+		String userId = getCurrentPrincipalId();
 		log.debug("Looking for games of user {}", userId);
 		return repository.findByUserId(userId)
 				.stream()
@@ -50,15 +74,19 @@ public class GameServiceImpl implements GameService {
 	public Game getGame(String id) {
 		log.debug("Looking for game {}", id);
 		log.debug("Game: {}", repository.findOne(id));
-		return repository.findOne(id);
+		Game game = repository.findOne(id);
+		return validUserOrAnonymous(game.getUserId()) ? game : null;
 	}
 	
 	@Override
 	public Movement rollDice(String id) {
-		Game game = repository.findOne(id);
-		int dice = game == null ? defaultGame.getDefaultGameDice() : game.getDice();
-		int nCells = (RANDOM.nextInt(dice * 3) + 2) / 3;
-		return move(game, nCells);
+		Game game = getGame(id);
+		if (game != null) {
+			int dice = game == null ? defaultGame.getDefaultGameDice() : game.getDice();
+			int nCells = (RANDOM.nextInt(dice * 3) + 2) / 3;
+			return move(game, nCells);
+		}
+		return null;
 	}
 	
 	private int initializeDice(List<Cell> board, Integer dice) {
@@ -79,9 +107,9 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game createGame(long userId, List<Cell> board, List<Player> players, Integer dice) {
+	public Game createGame(List<Cell> board, List<Player> players, Integer dice) {
 		Game game = new Game();
-		game.setUserId(userId);
+		game.setUserId(getCurrentPrincipalOrAnonymousId());
 		game.setBoard(initializeBoard(board));
 		game.initializeStatus(players);
 		game.setDice(initializeDice(board, dice));
@@ -94,7 +122,6 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public Game createGame(BoardConfiguration configuration) {
 		return createGame(
-				configuration.getUserId(),
 				cellsService.getCells(configuration),
 				configuration.getPlayers(),
 				configuration.getDice());
@@ -103,19 +130,21 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public Game createGame(long idConf) {
 		BoardConfiguration board = boardConfsService.getConfiguration(idConf);
-		return createGame(board);
+		return validUser(board.getUserId()) ? createGame(board) : null;
 	}
 	
-	public Game createGameWithDefaultConfiguration(String idConf) {
-		log.info("Executing fallback method createGameWithDefaultConfiguration");
-		BoardConfiguration configuration = defaultGame.createDefaultBoardConfiguration();
-		configuration.setPlayers(defaultGame.createDefaultPlayers());
-		return createGame(configuration);
+	@Override
+	public Game createAnonymousGame() {
+		BoardConfiguration board = boardConfsService.getAnonymousConfiguration();
+		return createGame(board);
 	}
 	
 	@Override
 	public void deleteGame(String id) {
-		repository.delete(id);
+		Game game = new Game();
+		game.setId(id);
+		game.setUserId(getCurrentPrincipalOrAnonymousId());
+		repository.delete(game);
 	}
 
 	private Movement move(Game game, int nCells) {
@@ -131,6 +160,7 @@ public class GameServiceImpl implements GameService {
 		movement.setDice(nCells);
 		movement.setFrom(current.getPosition());
 		movement.setTurn(status.getTurn());
+		movement.setPlayer(status.currentPlayer());
 		
 		if (position >= game.getBoard().size() - 1) {
 			// Game finished
@@ -145,14 +175,13 @@ public class GameServiceImpl implements GameService {
 				position = findNextOka(game, movement, current.getPosition(), position);
 			} else {
 				current.setNitems(current.getNitems() - toCell.getNitems());
+				status.nextTurn();
 			}
 		}
 		current.setPosition(position);
 		
 		movement.setTo(position);
-		movement.setPlayer(status.currentPlayer());
 		movement.setToCell(game.getBoard().get(position));
-		status.nextTurn();
 		movement.setNextTurn(status.getTurn());
 		movement.setStatus(status);
 		

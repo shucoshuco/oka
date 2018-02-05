@@ -1,4 +1,4 @@
-package es.fpg.oka.service;
+package es.fpg.oka.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +16,7 @@ import es.fpg.oka.model.BoardConfiguration;
 import es.fpg.oka.model.Cell;
 import es.fpg.oka.model.Level;
 import es.fpg.oka.repository.CellRepository;
+import es.fpg.oka.service.CellService;
 
 @Service
 public class CellServiceImpl implements CellService {
@@ -70,6 +71,10 @@ public class CellServiceImpl implements CellService {
 	}
 	
 	private void fixBoardConfiguration(BoardConfiguration configuration) {
+		
+		if (configuration == null) {
+			throw new IllegalArgumentException("Configuration can't be null");
+		}
 		
 		Set<Level> empty = new TreeSet<>(); 
 		int notEmpty = 0;

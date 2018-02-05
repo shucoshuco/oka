@@ -10,13 +10,14 @@ import es.fpg.oka.model.Player;
 
 public interface GameService {
 
-	List<Game> userGames(long userId);
+	List<Game> userGames();
 
 	Movement rollDice(String id);
 	
 	Game getGame(String id);
-	Game createGame(long userId, List<Cell> board, List<Player> players, Integer dice);
+	Game createGame(List<Cell> board, List<Player> players, Integer dice);
 	Game createGame(BoardConfiguration configuration);
 	Game createGame(long idConf);
+	Game createAnonymousGame();
 	void deleteGame(String id);
 }

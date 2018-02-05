@@ -1,0 +1,21 @@
+{
+	id: 1,
+	ncells: 69,
+	dice: 3,
+	okaGap: 5,
+	levels: [13, 13, 13, 13, 17],
+	players: [
+		{
+			name: "Man",
+			alias: "Superman",
+			gender: "MALE",
+			nitems: 5,
+		},
+		{
+			name: "Woman",
+			alias: "Pussy cat",
+			gender: "FEMALE",
+			nitems: 5,
+		},
+	],
+}

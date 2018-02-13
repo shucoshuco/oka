@@ -2,20 +2,27 @@
 <html>
 
 <head>
-    <title>tmp</title>
+    <title>GAMEsutra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!-- inject:css -->
     <!-- endinject -->
 </head>
 
 <body ng-app="web" ng-cloak>
-    <h1 class="md-display-1 text-center">Juego de la oca</h1>
-    <div class="text-center"><md-icon md-svg-src="/public/images/angular-logo.svg" aria-label="Angular"></md-icon></div>
-    <md-content class="md-padding" layout="row" layout-align="center">
-        <md-nav-bar md-selected-nav-item="" nav-bar-aria-label="navigation links">
-            <md-nav-item md-nav-sref="home" name="home">Home</md-nav-item>
-            <md-nav-item md-nav-sref="about" name="about">About</md-nav-item>
-        </md-nav-bar>
-    </md-content>
+    <md-toolbar class="md-hue-2" ng-controller="HeaderController">
+      <div class="md-toolbar-tools">
+        <a href="/#!"><img class="cover" src="public/images/cover.png"/></a>
+        <h2 flex md-truncate><a href="/#">GAMESutra</a></h2>
+
+        <md-button class="md-button" aria-label="Favorite" ng-show="isLoggedIn()" ng-click="home()">
+          Home
+        </md-button>
+        <md-button class="md-button" aria-label="Favorite" ng-show="isLoggedIn()" ng-click="logout()">
+          Logout
+        </md-button>
+      </div>
+    </md-toolbar>
     <div ui-view></div>
     <!-- inject:js -->
     <!-- endinject -->

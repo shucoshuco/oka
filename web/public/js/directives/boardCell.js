@@ -81,7 +81,8 @@
 						context.quadraticCurveTo(cPoints[11].x, cPoints[11].y,
 												cPoints[3].x, cPoints[3].y);
 						context.closePath();
-						context.fillStyle = levels[$scope.cell.level];
+						let levelIndex = $scope.cell.oka ? 0 : $scope.cell.level + 1;
+						context.fillStyle = levels[levelIndex];
 						context.fill();
 						context.clip();
 

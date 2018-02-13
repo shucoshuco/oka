@@ -148,6 +148,7 @@ $levels: (#000000, #FFFFFF, #FFDAD9, #FF6D69, #CC5754, #AC1D1E);
 	float: left;
 	position: relative;
 	background-color: #333333;
+	border-radius: 5px;
 }
 
 .cell-wrapper {
@@ -163,6 +164,9 @@ $levels: (#000000, #FFFFFF, #FFDAD9, #FF6D69, #CC5754, #AC1D1E);
 	@for $i from 1 through length($levels) {
 	    &.level-#{$i - 1} .cell-inner {
 	        background-color: rgba(nth($levels, $i), 1);
+	    }
+	    &.level-#{$i - 1}.oka .cell-inner {
+	        background-color: rgba(nth($levels, 1), 1);
 	    }
 	}
 }
@@ -207,6 +211,7 @@ span.number {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
+	border-radius: 5px;
 }
 
 canvas {
@@ -234,7 +239,7 @@ canvas {
 
 	& + span.rotation-3 {
 		bottom: 2.8em;
-		right: 5.8em;
+		right: 8.2em;
 	}
 }
 
@@ -264,7 +269,7 @@ div.gender-MALE {
 
 div.gender-FEMALE {
 	background-image: url('../images/female-shadow.png');
-	height: 4.5em;
+	height: 5em;
 	width: 3em;
 	background-size: cover;
 }

@@ -3,8 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import {catchError, tap} from 'rxjs/operators';
-import { Game } from './Game';
 import {Movement} from './Movement';
+import {Cell} from './Cell';
+import {Player} from './Player';
 
 @Injectable()
 export class GameApiService {
@@ -25,10 +26,10 @@ export class GameApiService {
   }
 
   /** GET heroes from the server */
-  getBoard(): Observable<Game> {
-    return this.http.post<Game>(this.gamesUrl, new Game()).pipe(
-      tap((game: Game) => console.log(`New game with id=${game.id}`)),
-      catchError(this.handleError<Game>('createGame'))
+  getBoard(): Observable<object> {
+    return this.http.post(this.gamesUrl, {}).pipe(
+      tap(game => console.log(`New game with id=${game['id']}`)),
+      catchError(this.handleError('createGame'))
     );
   }
 

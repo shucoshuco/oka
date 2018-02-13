@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {GameApiService} from '../game-api.service';
-import { Game } from '../Game';
-import {Status} from '../Status';
 import {Player} from '../Player';
 import {Cell} from '../Cell';
+import {Board} from '../Board';
+import {Point} from '../Point';
 
 @Component({
   selector: 'app-board',
@@ -13,20 +13,20 @@ import {Cell} from '../Cell';
 export class BoardComponent implements OnInit {
 
   gameId: string;
+
   loading: boolean;
   errorLoading: boolean;
   timeoutId: number;
 
-  board: any;
-  status: Status;
+  board: Board;
+  turn: number;
   players: Player[];
+
   movement: any;
   advance: number;
   minWidth: number;
 
   constructor(private gameApi: GameApiService) {
-    this.gameId = 'board-1';
-    this.loading = true;
   }
 
   static initialWidth() {
@@ -115,7 +115,7 @@ export class BoardComponent implements OnInit {
     };
   }
 
-  static updateBoard(cells: Cell[], lastCell, boardParameters) {
+  static updateBoard(cells: Cell[], lastCell: Cell, boardParameters) {
     let top = boardParameters.width - boardParameters.cellHeight;
     let left = 0;
 
@@ -188,23 +188,23 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  static createBoard(initialWidth, cells) {
+  static createBoard(initialWidth, cellsRaw): Board {
     const boardParameters =
-      BoardComponent.calculateBoardParameters(initialWidth, cells.length);
+      BoardComponent.calculateBoardParameters(initialWidth, cellsRaw.length);
 
-    cells.forEach(cell => {
-      cell.players = [];
-      cell.level = cell.oka ? 0 : cell.level;
+    const cells: Cell[] = [];
+
+    cellsRaw.forEach(c => {
+      const cell = new Cell();
+      Object.assign(cell, c);
+      cell.level = c.oka ? 0 : c.level;
+      cells.push(cell);
     });
 
-    const lastCell = {};
+    const lastCell = new Cell();
     BoardComponent.updateBoard(cells, lastCell, boardParameters);
 
-    return {
-      parameters: boardParameters,
-      cells: cells,
-      lastCell: lastCell,
-    };
+    return new Board(boardParameters, cells, lastCell);
   }
 
   initializeMovement(board, players) {
@@ -320,32 +320,54 @@ export class BoardComponent implements OnInit {
 
   }
 
+  calculatePlayerPositions(player: Player, cell: Cell) {
+    const boardElement = document.getElementById('board');
+    if (boardElement) {
+      const positions = cell.innerCellOffset();
+      for (let i = 0; i < cell.players.length; i++) {
+        if (cell.players[i] === player.ordinal) {
+          player.coords = positions[i];
+          player.coords.x += boardElement.offsetLeft;
+          player.coords.y += boardElement.offsetTop;
+        }
+      }
+    } else {
+      player.coords = new Point();
+    }
+  }
+
+  start() {
+    this.players.forEach(p => this.calculatePlayerPositions(p, this.board.cells[0]));
+  }
+
   ngOnInit() {
 
-    this.gameApi.getBoard().subscribe((game: Game) => {
-      this.gameId = game.id;
+    this.loading = true;
+
+    this.gameApi.getBoard().subscribe((game) => {
+      this.gameId = game['id'];
+      this.turn = game['status']['turn'];
+
+      this.board = BoardComponent.createBoard(BoardComponent.initialWidth(), game['board']);
+
+      const cell0 = this.board.cells[0];
       this.players = [];
-      this.status = game.status;
-      game.status.players.forEach(p => {
+      game['status']['players'].forEach((p, idx) => {
         const player: Player = new Player();
-        player.position = p.position;
-        player.gender = p.gender;
+        player.ordinal = idx;
+        player.coords = new Point();
+        Object.assign(player, p);
         this.players.push(player);
+        cell0.players.push(idx);
       });
-      this.board = BoardComponent.createBoard(BoardComponent.initialWidth(), game.board);
+
       this.movement = this.initializeMovement(this.board, this.players);
       this.advance = this.movement.advance;
       this.nextTurn = this.movement.nextTurn;
-      this.players.forEach(player => {
-        const cell = this.board.cells[player.position];
-        cell.players.push(player);
-        this.movement.updateCellPositions(cell);
-      });
-      this.players[this.status.turn].turn = true;
-      // this.status.rolling = true;
       this.loading = false;
-      this.minWidth = this.board.parameters.width;
-      // this.status.rolling = true;
+      this.minWidth = this.board.parameters['width'];
+
+      setTimeout(this.start.bind(this), 2000);
     });
   }
 }

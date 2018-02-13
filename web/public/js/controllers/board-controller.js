@@ -114,6 +114,9 @@
 				let step = state.next();
 				let offset = boardParameters.n1stCell;
 
+				lastCell.width = boardParameters.width;
+				lastCell.height = boardParameters.width;
+
 				for (let i = 1; i < cells.length; ) {
 					while (offset++ < perSide && i < cells.length) {
 						if (offset === perSide - 1) {
@@ -148,14 +151,17 @@
 						offset = 0;
 						if (state.current == 0) {
 							lastCell.left = left;
-							lastCell.width = perSide * boardParameters.cellWidth;
+							lastCell.width -= boardParameters.cellHeight;
 						}
 						if (state.current == 1) {
+							lastCell.height -= boardParameters.cellHeight;
+						}
+						if (state.current == 2) {
 							lastCell.width -= boardParameters.cellHeight;
 						}
 						if (state.current == 3) {
 							lastCell.top = top;
-							lastCell.height = perSide * boardParameters.cellWidth;
+							lastCell.height -= boardParameters.cellHeight;
 						}
 					}
 				}
@@ -168,7 +174,7 @@
 
 				cells.forEach(function(cell) {
 					cell.players = [];
-					cell.level = cell.oka ? 0 : cell.level + 1;
+					cell.level = cell.oka ? 0 : cell.level;
 				});
 
 				let lastCell = {};
@@ -350,7 +356,8 @@
 						$scope.status.rolling = false;
 						if (!moving) {
 							let currentPosition = $scope.players[mov.turn].boardPosition;
-							let cellsToMove = mov.to - currentPosition;
+							let cellsToMove =
+								(mov.jump ? mov.jumpInfo.to : mov.to) - currentPosition;
 							moveToPosition(
 								$scope.players[mov.turn],
 								cellsToMove,

@@ -1,59 +1,52 @@
-export class Cell {
+import {Point} from './Point';
+import {Rect} from './Rect';
+
+export class Cell extends Rect{
 
   corner: boolean;
   rotation: number;
   position: number;
-
-  width: number;
-  height: number;
-  top: number;
-  left: number;
 
   oka: boolean;
   level: number;
 
   vertical: boolean;
 
-  static halfCell(vertical, rect) {
+  players: number[] = [];
+
+  static halfCell(vertical: boolean, rect: Rect): Rect[] {
+    return [
+      new Rect(rect.top, rect.left,
+                vertical ? rect.width : rect.width / 2,
+                vertical ? rect.height / 2 : rect.height),
+      new Rect(vertical ? rect.top + rect.height / 2 : rect.top,
+                vertical ? rect.left : rect.left + rect.width / 2,
+               vertical ? rect.width : rect.width / 2,
+              vertical ? rect.height / 2 : rect.height),
+    ];
+  }
+
+  static calculateCenter(rect: Rect): Point {
+    return new Point((2 * rect.top + rect.height) / 2,
+                     (2 * rect.left + rect.width) / 2);
+  }
+
+  static halfTriangleCell(tr: Rect) {
     return [
       {
-        top: rect.top,
-        left: rect.left,
-        width: vertical ? rect.width : rect.width / 2,
-        height: vertical ? rect.height / 2 : rect.height,
+        p1: new Point(tr.left, tr.top),
+        p2: new Point(tr.left + tr.width / 2, tr.top + tr.height / 2),
+        p3: new Point(tr.left, tr.top + tr.height),
       },
       {
-        top: vertical ? rect.top + rect.height / 2 : rect.top,
-        left: vertical ? rect.left : rect.left + rect.width / 2,
-        width: vertical ? rect.width : rect.width / 2,
-        height: vertical ? rect.height / 2 : rect.height,
+        p1: new Point(tr.left + tr.width / 2, tr.top + tr.height / 2),
+        p2: new Point(tr.left, tr.top + tr.height),
+        p3: new Point(tr.left + tr.width, tr.top + tr.height),
       },
     ];
   }
 
-  static calculateCenter(rect) {
-    return {
-      top: (2 * rect.top + rect.height) / 2,
-      left: (2 * rect.left + rect.width) / 2,
-    };
-  }
-
-  static halfTriangleCell(tr) {
-    return [
-      {
-        p1: {x: tr.left, y: tr.top},
-        p2: {x: tr.left + tr.width / 2, y: tr.top + tr.height / 2},
-        p3: {x: tr.left, y: tr.top + tr.height},
-      },
-      {
-        p1: {x: tr.left + tr.width / 2, y: tr.top + tr.height / 2},
-        p2: {x: tr.left, y: tr.top + tr.height},
-        p3: {x: tr.left + tr.width, y: tr.top + tr.height},
-      },
-    ];
-  }
-
-  static calculateTriangleCenter(tr, cell) {
+  static calculateTriangleCenter(tr, cell: Cell) {
     let top = (tr.p1.y + tr.p2.y + tr.p3.y) / 3;
     let left = (tr.p1.x + tr.p2.x + tr.p3.x) / 3;
 
@@ -64,13 +57,10 @@ export class Cell {
       top = -(left - xCenter) + yCenter;
       left = aux - yCenter + xCenter;
     }
-    return {
-      top: top,
-      left: left,
-    };
+    return new Point(top, left);
   }
 
-  innerRectangleCellOffset(nplayers: number) {
+  innerRectangleCellOffset(nplayers: number): Point[] {
     if (nplayers === 1) {
       return [Cell.calculateCenter(this)];
     }
@@ -98,7 +88,7 @@ export class Cell {
     ];
   }
 
-  innerTriangleCellOffset(nplayers: number) {
+  innerTriangleCellOffset(nplayers: number): Point[] {
     const tr = {
       p1: {x: this.left, y: this.top},
       p2: {x: this.left + this.width, y: this.top + this.height},
@@ -117,9 +107,9 @@ export class Cell {
     // TODO Add more players to corner cells
   }
 
-  innerCellOffset(nplayers: number) {
+  innerCellOffset(): Point[] {
     return this.corner
-        ? this.innerTriangleCellOffset(nplayers)
-        : this.innerRectangleCellOffset(nplayers);
+        ? this.innerTriangleCellOffset(this.players.length)
+        : this.innerRectangleCellOffset(this.players.length);
   }
 }

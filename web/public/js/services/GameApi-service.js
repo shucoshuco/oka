@@ -1,34 +1,44 @@
 (function(app) {
 	app.service('GameApi', ['$resource', function($resource) {
 		return $resource(
-			'http://192.168.1.105:8080/games/:id', {id: '@id'},
+			'http://192.168.1.105:8080/games/user/:id', {id: '@id'},
 			{
 				userGames: {
 					method: 'GET',
-					url: 'http://192.168.1.105:8080/games/users/:userId',
+					url: 'http://192.168.1.105:8080/games/user',
 					isArray: true,
+					withCredentials: true,
 				},
 				newGameWithIdConf: {
 					method: 'POST',
-					url: 'http://192.168.1.105:8080/games/game/create/userconf',
+					url: 'http://192.168.1.105:8080/games/user/create/userconf',
 					params: {idConf: '@id'},
+					withCredentials: true,
 				},
 				newGameWithConf: {
 					method: 'POST',
-					url: 'http://192.168.1.105:8080/games/game/create/:userId/configurable',
-					params: {userId: 1},
+					url: 'http://192.168.1.105:8080/games/user/create/configurable',
+					withCredentials: true,
+				},
+				newAnonymousGame: {
+					method: 'POST',
+					url: 'http://192.168.1.105:8080/games/user/create/anonymous',
+					withCredentials: true,
 				},
 				rollDice: {
 					method: 'POST',
-					url: 'http://192.168.1.105:8080/games/:id/roll-dice',
+					url: 'http://192.168.1.105:8080/games/user/:id/roll-dice',
+					withCredentials: true,
 				},
 				status: {
 					method: 'GET',
-					url: 'http://192.168.1.105:8080/games/:id/status',
+					url: 'http://192.168.1.105:8080/games/user/:id/status',
+					withCredentials: true,
 				},
 				cell: {
 					method: 'GET',
-					url: 'http://192.168.1.105:8080/cells/cells/:id',
+					url: 'http://192.168.1.105:8080/cells/:id',
+					withCredentials: true,
 				},
 			});
 	}]);

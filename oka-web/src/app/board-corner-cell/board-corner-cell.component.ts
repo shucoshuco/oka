@@ -58,7 +58,7 @@ export class BoardCornerCellComponent implements OnInit {
     }
 
     const levels = [
-      '#000000', '#FFFFFF', '#FFDAD9',
+      '#000000', '#ECF8E0', '#FFDAD9',
       '#FF6D69', '#CC5754', '#AC1D1E',
     ];
 

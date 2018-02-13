@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Input, OnChanges, SimpleChange} from '@angular/core';
-import {Gender} from '../Gender';
 import {Player} from '../Player';
 import {Cell} from '../Cell';
+import {Point} from '../Point';
 
 @Component({
   selector: 'app-board-player',
@@ -12,10 +12,11 @@ export class BoardPlayerComponent implements OnChanges, OnInit {
 
   @Input() speed: string;
   @Input() player: Player;
-  @Input() cells: Cell [];
-  position: any;
+  position: Point;
 
-  constructor(private element: ElementRef) { }
+  constructor(private element: ElementRef) {
+    this.position = new Point();
+  }
 
   getSafeChildren() {
     if (this.element.nativeElement.children[0]) {
@@ -26,29 +27,18 @@ export class BoardPlayerComponent implements OnChanges, OnInit {
   }
 
   move() {
-    console.log(this.player.position);
-    console.log(this.cells);
-    console.log(this.player);
-    const pos = this.cells[this.player.position].innerCellOffset(1);
-    this.position = {
-      x: pos[0] - (this.getSafeChildren().offsetWidth / 2),
-      y: pos[1] - (this.getSafeChildren().offsetHeight / 2),
-    };
+    this.position.x = this.player.coords.x - (this.getSafeChildren().offsetWidth / 2);
+    this.position.y = this.player.coords.y - (this.getSafeChildren().offsetHeight / 2);
   }
 
   ngOnInit() {
-    this.position = {
-      x: 0,
-      y: 0,
-    };
-    setTimeout(this.move.bind(this), 2000);
+
   }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-    if (changes.cells) {
-      this.cells = changes.cells.currentValue;
-    } if (changes.player) {
+    if (changes.player) {
       this.player = changes.player.currentValue;
+      this.move();
     }
   }
 }

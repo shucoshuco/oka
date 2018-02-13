@@ -11,7 +11,7 @@
         </div>
         <div hide-xs hide-md hide-sm>
             <ul class="clothes-container gender-{{player.model.gender}}" ng-show="player.model.nitems > 0">
-                <li class="animate-repeat gender-{{player.model.gender | lowercase}}" ng-repeat="clothes in getNumber(player.model.nitems) track by $index">
+                <li class="animate-repeat gender-{{player.model.gender | lowercase}}" ng-repeat="clothes in getNumber(player.model.nitems)">
                 </li>
             </ul>
         </div>

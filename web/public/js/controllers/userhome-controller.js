@@ -1,19 +1,37 @@
 (function(app) {
-	app.controller('usergamesController',
+	app.controller('userhomeController',
 		['$scope', '$location', '$state', 'GameApi', '$mdDialog', 'UserApi',
-		function($scope, $location, $state, GameApi, $mdDialog, UserApi) {
-			$scope.user = 1;
+			'AuthService', 'CallService', 'fileUpload',
+		function($scope, $location, $state, GameApi, $mdDialog, UserApi,
+				AuthService, CallService, fileUpload) {
 			$scope.loading = true;
-			$scope.games = GameApi.userGames({userId: 1},
-				function success() {
-					$scope.loading = false;
-					$scope.error = false;
-				}, function error(error) {
-					$scope.error = error;
-					console.error('Error: ', error);
-					$scope.loading = false;
+			$scope.user = {};
+			$scope.pendingGames = false;
+
+			AuthService.user().then(
+				function(user) {
+					$scope.user = user;
+					CallService.callPrivateService(GameApi.userGames, {},
+						function(games) {
+							$scope.games = games;
+							$scope.pendingGames = games.length > 0;
+							$scope.loading = false;
+						},
+						function(error) {
+							$scope.loading = false;
+							$scope.error = error;
+						}
+					);
 				}
 			);
+
+			$scope.uploadFile = function() {
+				let file = $scope.newAvatar;
+				let uploadUrl = '/fileUpload';
+				console.log('file is ' );
+				console.dir(file);
+				fileUpload.uploadFileToUrl(file, uploadUrl);
+			};
 
 			$scope.openBoard = function openBoard(board) {
 				$location.path('board/' + board);
@@ -39,7 +57,6 @@
 				);
 			};
 
-
 			$scope.confirmRemoveGame = function confirmRemoveGame(ev, id) {
 				// Appending dialog to document.body to cover sidenav in docs app
 				let confirm = $mdDialog.confirm()
@@ -52,9 +69,14 @@
 					.ok('Sí, bórralo')
 					.cancel('Cancelar');
 
-				$mdDialog.show(confirm).then(function() {
-					$scope.removeGame(id);
-				});
+				$mdDialog.show(confirm).then(
+					function() {
+						$scope.removeGame(id);
+					},
+					function() {
+
+					}
+				);
 			};
 
 			$scope.removeGame = function removeGame(id) {

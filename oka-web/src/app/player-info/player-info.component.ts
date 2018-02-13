@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Player} from '../Player';
 
+import {imagesPath} from '../globals';
+
 @Component({
   selector: 'app-player-info',
   templateUrl: './player-info.component.html',
@@ -17,7 +19,7 @@ export class PlayerInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.imageUrl = `../../assets/normal/${this.player.gender.toString().toLowerCase()}.png`;
-    this.clothesUrl = `../../assets/normal/${this.player.gender.toString().toLowerCase()}-clothes.png`;
+    this.imageUrl = `${imagesPath}${this.player.gender.toString().toLowerCase()}.png`;
+    this.clothesUrl = `${imagesPath}/${this.player.gender.toString().toLowerCase()}-clothes.png`;
   }
 }

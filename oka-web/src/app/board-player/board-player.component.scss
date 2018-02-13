@@ -1,3 +1,5 @@
+@import '../common';
+
 .player {
   background-repeat: no-repeat;
   position: absolute;
@@ -16,14 +18,14 @@
 }
 
 div.gender-MALE {
-  background-image: url('/assets/normal/male-shadow.png');
+  background-image: url($images + '/male-shadow.png');
   height: 4em;
   width: 4em;
   background-size: cover;
 }
 
 div.gender-FEMALE {
-  background-image: url('/assets/normal/female-shadow.png');
+  background-image: url($images + '/female-shadow.png');
   height: 4em;
   width: 4em;
   background-size: cover;

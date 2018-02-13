@@ -1,3 +1,5 @@
+@import '../common';
+
 /*Fade all the DIV when user hovers on any div*/
 .players-container.turn player-info {
   zoom: 1;
@@ -74,17 +76,17 @@
       li {
         float: right;
         width: 3em;
-        height: 2em;
+        height: 3em;
         margin-left: 0.3em;
         background-repeat: no-repeat;
         background-size: cover;
         list-style: none;
 
         &.gender-male {
-          background-image: url('/assets/normal/male-clothes.png');
+          background-image: url($images + '/male-clothes.png');
         }
         &.gender-female {
-          background-image: url('/assets/normal/female-clothes.png');
+          background-image: url($images + '/female-clothes.png');
         }
       }
     }

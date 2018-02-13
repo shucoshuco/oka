@@ -37,7 +37,7 @@
 
 .last-cell {
   float: left;
-  background-image: url('/assets/normal/winner.png');
+  background-image: url($images + '/winner.png');
   position: absolute;
   z-index: 10;
   background-size: cover;

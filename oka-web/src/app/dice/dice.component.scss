@@ -32,10 +32,28 @@ $dot-long: $dice-width * 3 / 4 - $dot-width / 2;
   100% {transform: translateX(0px) translateY(-0px) rotateX(1800deg) rotateY(0) rotateZ(0) scale(2, 2);}
 }
 
+.dice-turn {
+  position: fixed;
+  left: 5%;
+  top: 20%;
+  display: block;
+  color: white;
+  z-index: 200;
+  font-size: 3em;
+  text-shadow: 3px 2px grey;
+
+  @media screen and (max-width: $break-small) {
+    font-size: 1.5em;
+    left: 0%;
+  }
+}
+
 #dice {
-  position: absolute;
-  top: 48%;
-  left: 48%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -$half-dice-width;
+  margin-left: -$half-dice-width;
   z-index: 200;
   width: $dice-width;
   height: $dice-width;
@@ -130,6 +148,9 @@ $dot-long: $dice-width * 3 / 4 - $dot-width / 2;
   &.six {
     transform: translateX(0px) translateY(0px) scale(2, 2) rotateX(180deg);
   }
+  &.zero {
+    transform: translateX(0px) translateY(0px) scale(2, 2) rotateX(180deg);
+  }
 }
 .side {
   position: absolute;
@@ -166,20 +187,5 @@ $dot-long: $dice-width * 3 / 4 - $dot-width / 2;
   }
   &.dbottom {
     margin-top: $dot-long;
-  }
-}
-
-div.background {
-  min-width: 100%;
-  min-height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: black;
-  opacity: 0.7;
-  z-index: 100;
-
-  &.hidden {
-    display: none;
   }
 }

@@ -11,6 +11,7 @@ import {GameApiService} from './game-api.service';
 import { BoardPlayerComponent } from './board-player/board-player.component';
 import { DiceComponent } from './dice/dice.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
+import { CellDetailComponent } from './cell-detail/cell-detail.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { PlayerInfoComponent } from './player-info/player-info.component';
     BoardComponent,
     BoardPlayerComponent,
     DiceComponent,
-    PlayerInfoComponent
+    PlayerInfoComponent,
+    CellDetailComponent
   ],
   imports: [
     BrowserModule, HttpClientModule

@@ -2,31 +2,33 @@
 
 .player {
   background-repeat: no-repeat;
-  position: absolute;
   float: left;
   z-index: 30;
 
   &.slow {
     transition: all 0.7s ease-out;
+    position: absolute;
   }
   &.medium {
     transition: all 0.5s ease-out;
+    position: absolute;
   }
   &.fast {
     transition: all 0.3s ease-out;
+    position: absolute;
   }
 }
 
 div.gender-MALE {
   background-image: url($images + '/male-shadow.png');
-  height: 4em;
-  width: 4em;
+  height: 3em;
+  width: 3em;
   background-size: cover;
 }
 
 div.gender-FEMALE {
   background-image: url($images + '/female-shadow.png');
-  height: 4em;
-  width: 4em;
+  height: 3em;
+  width: 3em;
   background-size: cover;
 }

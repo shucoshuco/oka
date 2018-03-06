@@ -83,7 +83,7 @@ public class GameServiceImpl extends SecuredServiceBase implements GameService {
 		Game game = getGame(id);
 		if (game != null) {
 			int dice = game == null ? defaultGame.getDefaultGameDice() : game.getDice();
-			int nCells = (RANDOM.nextInt(dice * 3) + 2) / 3;
+			int nCells = 5;// (RANDOM.nextInt(dice * 3) + 2) / 3;
 			return move(game, nCells);
 		}
 		return null;
@@ -108,6 +108,10 @@ public class GameServiceImpl extends SecuredServiceBase implements GameService {
 	
 	@Override
 	public Game createGame(List<Cell> board, List<Player> players, Integer dice) {
+		
+		// TODO Remove
+		players.forEach(p -> p.setNitems(1));
+		
 		Game game = new Game();
 		game.setUserId(getCurrentPrincipalOrAnonymousId());
 		game.setBoard(initializeBoard(board));
@@ -160,7 +164,6 @@ public class GameServiceImpl extends SecuredServiceBase implements GameService {
 		movement.setDice(nCells);
 		movement.setFrom(current.getPosition());
 		movement.setTurn(status.getTurn());
-		movement.setPlayer(status.currentPlayer());
 		
 		if (position >= game.getBoard().size() - 1) {
 			// Game finished
@@ -171,42 +174,45 @@ public class GameServiceImpl extends SecuredServiceBase implements GameService {
 			
 		} else {
 			Cell toCell = game.getBoard().get(position);
+			movement.setNitems(toCell.getNitems());
 			if (toCell.isOka() && current.getNitems() == 0) {
-				position = findNextOka(game, movement, current.getPosition(), position);
+				movement.setJumpInfo(findNextOka(game, position).orElse(null));
 			} else {
 				current.setNitems(current.getNitems() - toCell.getNitems());
 				status.nextTurn();
 			}
 		}
-		current.setPosition(position);
-		
+
 		movement.setTo(position);
-		movement.setToCell(game.getBoard().get(position));
 		movement.setNextTurn(status.getTurn());
 		movement.setStatus(status);
-		
+
+		if (movement.isJump()) {
+			current.setPosition(movement.getJumpInfo().getTo());
+		} else {
+			current.setPosition(position);
+		}
+
 		game.setLastUpdate(Instant.now());
 		repository.save(game);
 		return movement;
 	}
 
-	private int findNextOka(Game game, Movement movement, int initialPos, int currentPosition) {
+	private Optional<Jump> findNextOka(Game game, int position) {
 		Optional<Cell> nextOka = 
 				game.getBoard().stream()
-					.skip(currentPosition + 1)
+					.skip(position + 1)
 					.filter(c -> c.isOka())
 					.findFirst();
 		
 		if (!nextOka.isPresent()) {
-			return currentPosition;
+			return Optional.empty();
 		}
 		
 		Jump jump = new Jump();
-		jump.setFrom(initialPos);
-		jump.setTo(currentPosition);
-		jump.setToCell(game.getBoard().get(currentPosition));
-		movement.setJumpInfo(jump);
+		jump.setFrom(position);
+		jump.setTo(nextOka.get().getPosition());
 
-		return nextOka.get().getPosition();
+		return Optional.of(jump);
 	}
 }

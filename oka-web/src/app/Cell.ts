@@ -3,6 +3,8 @@ import {Rect} from './Rect';
 
 export class Cell extends Rect{
 
+  id: number;
+
   corner: boolean;
   rotation: number;
   position: number;
@@ -34,14 +36,14 @@ export class Cell extends Rect{
   static halfTriangleCell(tr: Rect) {
     return [
       {
-        p1: new Point(tr.left, tr.top),
-        p2: new Point(tr.left + tr.width / 2, tr.top + tr.height / 2),
-        p3: new Point(tr.left, tr.top + tr.height),
+        p1: new Point(tr.top, tr.left),
+        p2: new Point(tr.top + tr.height / 2, tr.left + tr.width / 2),
+        p3: new Point(tr.top + tr.height, tr.left),
       },
       {
-        p1: new Point(tr.left + tr.width / 2, tr.top + tr.height / 2),
-        p2: new Point(tr.left, tr.top + tr.height),
-        p3: new Point(tr.left + tr.width, tr.top + tr.height),
+        p1: new Point(tr.top + tr.height / 2, tr.left + tr.width / 2),
+        p2: new Point(tr.top + tr.height,  tr.left),
+        p3: new Point(tr.top + tr.height, tr.left + tr.width),
       },
     ];
   }

@@ -1,0 +1,32 @@
+<div *ngIf="show">
+  <div class="background"></div>
+  <div class="dialog"
+        [style.position]="position"
+        [style.left]="left"
+        [style.top]="top"
+        [style.width]="width + 'px'"
+        [style.height]="height + 'px'"
+        [style.margin-top]="(-(height / 2)) + 'px'"
+        [style.margin-left]="(-(width / 2)) + 'px'">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <h2>Cell number <span class="number dialog">{{cell.position}}</span></h2>
+      </div>
+
+      <div class="dialog-content">
+        <h2>{{title}}</h2>
+        <p>
+          {{description}}
+        </p>
+
+        <img style="margin: auto; max-width: 100%;" alt="Cell image" [src]="getImageUrl()">
+      </div>
+
+      <div class="dialog-buttons">
+        <button (click)="finished()">
+          Completed
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

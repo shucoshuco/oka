@@ -1,0 +1,15 @@
+@import '../common';
+
+.dialog {
+  z-index: 200;
+  transition: all 0.5s ease-out;
+  border: 1px solid #ccc;
+  background-color: white;
+  overflow: hidden;
+}
+
+
+.dialog-box {
+  overflow: auto;
+  min-widht: 300px;
+}

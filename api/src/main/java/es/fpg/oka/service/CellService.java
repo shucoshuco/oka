@@ -9,5 +9,5 @@ public interface CellService {
 	
 	List<Cell> getCells(BoardConfiguration configuration);
 	Cell getCell(long idCell);
-	Cell getOka();
+	Cell getOka(boolean itemsPending);
 }

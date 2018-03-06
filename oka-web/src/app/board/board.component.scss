@@ -14,14 +14,11 @@
   padding: 1em 0;
 }
 
-.dice-wrapper {
-  padding: 0;
-
-  & > div {
-    margin-top: 1.5em;
-  }
+.player-info-wrapper {
+  width: 100%;
+  float: left;
+  display: block;
 }
-
 .board-panel {
   overflow: hidden;
 }

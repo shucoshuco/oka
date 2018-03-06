@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, Input, OnChanges, SimpleChange} from '@angular/core';
-import {Player} from '../Player';
-import {Cell} from '../Cell';
 import {Point} from '../Point';
+import {Gender} from '../Gender';
 
 @Component({
   selector: 'app-board-player',
@@ -10,8 +9,12 @@ import {Point} from '../Point';
 })
 export class BoardPlayerComponent implements OnChanges, OnInit {
 
+  @Input() offsetX: number;
+  @Input() offsetY: number;
+  @Input() gender: Gender;
   @Input() speed: string;
-  @Input() player: Player;
+  @Input() playerY: number;
+  @Input() playerX: number;
   position: Point;
 
   constructor(private element: ElementRef) {
@@ -26,19 +29,26 @@ export class BoardPlayerComponent implements OnChanges, OnInit {
     }
   }
 
-  move() {
-    this.position.x = this.player.coords.x - (this.getSafeChildren().offsetWidth / 2);
-    this.position.y = this.player.coords.y - (this.getSafeChildren().offsetHeight / 2);
-  }
-
   ngOnInit() {
-
+    let element = this.getSafeChildren();
+    this.position.x = element.offsetLeft;
+    this.position.y = element.offsetTop - 10;
   }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-    if (changes.player) {
-      this.player = changes.player.currentValue;
-      this.move();
+    if (changes['offsetY']) {
+      this.offsetY = changes['offsetY'].currentValue;
     }
+    if (changes['offsetX']) {
+      this.offsetX = changes['offsetX'].currentValue;
+    }
+    if (changes['playerY']) {
+      this.playerY = changes['playerY'].currentValue;
+    }
+    if (changes['playerX']) {
+      this.playerX = changes['playerX'].currentValue;
+    }
+    this.position.y = this.offsetY + this.playerY - (this.getSafeChildren().offsetHeight / 2);
+    this.position.x = this.offsetX + this.playerX - (this.getSafeChildren().offsetWidth / 2);
   }
 }

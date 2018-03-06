@@ -27,19 +27,50 @@ public class CellServiceImpl implements CellService {
 	@Value("${cells.cell.oka.description}")
 	private String okaDescription;
 	
+	@Value("${cells.cell.oka.cellId}")
+	private String okaCellId;
+	
+	@Value("${cells.cell.oka-no-item.title}")
+	private String okaNoItemTitle;
+	
+	@Value("${cells.cell.oka-no-item.description}")
+	private String okaNoItemDescription;
+	
+	@Value("${cells.cell.oka-no-item.cellId}")
+	private String okaNoItemCellId;
+	
 	@Autowired
 	private CellRepository repository;
 	
 	private Cell okaCell;
+	private Cell okaNoItemCell;
 	
 	@PostConstruct
-	public void createOkaCell() {
-		okaCell = new Cell();
-		okaCell.setTitle(okaTitle);
-		okaCell.setDescription(okaDescription);
-		okaCell.setOka(true);
-		okaCell.setNitems(1);
-		okaCell.setCellId("oka");
+	public void initialize() {
+		okaCell = createOkaCell(0, Level.LIGHT.ordinal());
+		okaNoItemCell = createOkaNoItemCell(0, Level.LIGHT.ordinal());
+	}
+	
+	private Cell createOkaCell(int position, int level) {
+		Cell cell = new Cell();
+		cell.setTitle(okaTitle);
+		cell.setDescription(okaDescription);
+		cell.setOka(true);
+		cell.setNitems(1);
+		cell.setCellId(okaCellId);
+		cell.setPosition(position);
+		cell.setLevel(level);
+		return cell;
+	}
+	
+	private Cell createOkaNoItemCell(int position, int level) {
+		Cell cell = createOkaCell(position, level);
+		cell.setTitle(okaNoItemTitle);
+		cell.setDescription(okaNoItemDescription);
+		cell.setOka(true);
+		cell.setNitems(0);
+		cell.setCellId(okaNoItemCellId);
+		return cell;
 	}
 	
 	@Override
@@ -48,8 +79,8 @@ public class CellServiceImpl implements CellService {
 	}
 
 	@Override
-	public Cell getOka() {
-		return okaCell;
+	public Cell getOka(boolean itemsPending) {
+		return itemsPending ? okaCell : okaNoItemCell;
 	}
 
 	@Override
@@ -101,16 +132,12 @@ public class CellServiceImpl implements CellService {
 	}
 	
 	private void addOkas(BoardConfiguration configuration, List<Cell> cells) {
-		for (int i = configuration.getOkaGap(); i < cells.size(); i += configuration.getOkaGap()) {
+		for (int i = configuration.getOkaGap() - 1; i < cells.size(); i += configuration.getOkaGap()) {
 			Cell orig = cells.get(i);
-			orig.setTitle(okaTitle);
-			orig.setDescription(okaDescription);
-			orig.setOka(true);
-			orig.setNitems(1);
-			
 			if (orig.getLevel() == Level.GO.ordinal()) {
 				break;
 			}
+			cells.set(i, createOkaCell(orig.getPosition(), orig.getLevel()));
 		}
 	}
 }

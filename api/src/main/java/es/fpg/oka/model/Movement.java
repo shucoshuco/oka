@@ -11,9 +11,8 @@ public class Movement {
 	private int nextTurn;
 	private int from;
 	private int to;
+	private int nitems;
 	private Jump jumpInfo;
-	private Player player;
-	private Cell toCell;
 	private GameStatus status;
 	
 	@Data
@@ -21,7 +20,6 @@ public class Movement {
 		
 		private int from;
 		private int to;
-		private Cell toCell;
 	}
 	
 	public boolean isJump() {

@@ -6,9 +6,13 @@ security:
 cells:
   cell:
     oka:
-      title: OKA
-      description: Striptease
-      imageUrl: /images/oka.png
+      title: Prenda
+      description: Striptease. Quítate una prenda de manera sensual
+      cellId: oka
+    oka-no-item:
+      title: Oca
+      description: Como ya estás desnudo/a... De oca a oca, y tira porque te toca
+      cellId: oka
   default:
     board:
       ncells: 69

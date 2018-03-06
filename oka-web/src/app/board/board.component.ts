@@ -4,6 +4,7 @@ import {Player} from '../Player';
 import {Cell} from '../Cell';
 import {Board} from '../Board';
 import {Point} from '../Point';
+import {Movement} from '../Movement';
 
 @Component({
   selector: 'app-board',
@@ -12,21 +13,32 @@ import {Point} from '../Point';
 })
 export class BoardComponent implements OnInit {
 
+  offsetX: number;
+  offsetY: number;
+
   gameId: string;
 
-  loading: boolean;
-  errorLoading: boolean;
-  timeoutId: number;
+  status: string;
 
   board: Board;
   turn: number;
   players: Player[];
+  playerTurnName: string;
 
-  movement: any;
-  advance: number;
   minWidth: number;
 
-  constructor(private gameApi: GameApiService) {
+  movement: Movement;
+
+  speed = 'fast';
+  speeds = {'slow': 800, 'medium': 570, 'fast': 350};
+
+  currentCellDetail: Cell;
+  currentNItems: number;
+
+  constructor(private gameApi: GameApiService) {}
+
+  static emptyBoard() {
+    return new Board({}, [], new Cell());
   }
 
   static initialWidth() {
@@ -207,142 +219,139 @@ export class BoardComponent implements OnInit {
     return new Board(boardParameters, cells, lastCell);
   }
 
-  initializeMovement(board, players) {
-    let moving = false;
-    const speed = 'fast';
-    const speeds = {'slow': 800, 'medium': 570, 'fast': 350};
-
-    const updateCellPositions = function(cell) {
-      if (cell.players) {
-        // const positions = cell.innerCellOffset(cell.players.length, cell);
-        // for (let i = 0; i < cell.players.length; i++) {
-        //   cell.players[i].boardPosition = cell.position;
-        //   cell.players[i].top = positions[i].top;
-        //   cell.players[i].left = positions[i].left;
-        // }
-      }
-    };
-
-    const moveToPosition = function(player, position, callback) {
-      moving = true;
-
-      if (position === 0) {
-        clearInterval(this.timeoutId);
-        moving = false;
-        callback();
-        return;
-      }
-
-      const currentCell = player.boardPosition;
-      const nextCell = currentCell + 1;
-      if (nextCell >= board.cells.length) {
-        clearInterval(this.timeoutId);
-        moving = false;
-        return;
-      }
-
-      let cell = board.cells[nextCell];
-      cell.players = cell.players || [];
-      cell.players.push(player);
-      updateCellPositions(cell);
-
-      cell = board.cells[currentCell];
-      const index = cell.players.indexOf(player);
-      if (index > -1) {
-        cell.players.splice(index, 1);
-        updateCellPositions(cell);
-      }
-
-      this.timeoutId = setInterval(function() {
-        moveToPosition(player, position - 1, callback);
-      }, speeds[speed]);
-    };
-
-
-    return {
-      speed: speed,
-      refresh: function() {
-        board.cells.forEach(function(cell) {
-          updateCellPositions(cell);
-        });
-      },
-      advance: function(mov) {
-        this.status.rolling = false;
-        if (!moving) {
-          const currentPosition = this.players[mov.turn].boardPosition;
-          const cellsToMove =
-            (mov.jump ? mov.jumpInfo.to : mov.to) - currentPosition;
-          moveToPosition(
-            this.players[mov.turn],
-            cellsToMove,
-            function() {
-              this.board.cells[mov.player.position].selected = true;
-            }
-          );
-          this.lastMovement = mov;
-        }
-      },
-      updateCellPositions: updateCellPositions,
-    };
-  }
-
-  nextTurn(ev) {
-    alert(ev.target.value);
-    const changeTurn = function () {
-      this.players.forEach(function (p) {
-        p.turn = false;
-      });
-      this.players[this.lastMovement.turn].model
-        = this.lastMovement.player;
-      this.status = this.lastMovement.status;
-      const nextTurn = this.status.turn;
-      this.players[nextTurn].turn = true;
-      this.players[nextTurn].model =
-        this.status.players[nextTurn];
-      this.status.rolling = true;
-    };
-    // if (this.lastMovement && this.lastMovement.jump) {
-    //   moveToPosition(
-    //     this.players[this.lastMovement.turn],
-    //     this.lastMovement.to - this.lastMovement.jumpInfo.to,
-    //     changeTurn
-    //   );
-    // } else {
-    //   changeTurn();
-    // }
-  }
-
-  move(ev) {
-    alert(ev);
-  }
-
-  rollDice() {
-
-  }
-
-  calculatePlayerPositions(player: Player, cell: Cell) {
+  onResize(event) {
     const boardElement = document.getElementById('board');
-    if (boardElement) {
+    this.offsetX = boardElement.offsetLeft;
+    this.offsetY = boardElement.offsetTop;
+    this.players.forEach(p => this.updateCellPositions(this.board.cells[p.position]));
+  }
+
+  changeStatus(status) {
+    console.log('Status changed from ' + this.status + ' to ' + status);
+    this.status = status;
+  }
+
+  changeTurn() {
+    if (this.movement.nitems) {
+      this.players[this.turn].nitems -= this.movement.nitems;
+      console.log('Player items: ' + this.players[this.turn].nitems);
+    }
+    this.turn = this.movement.nextTurn;
+    this.players.forEach((p, idx) => {
+      p.turn = idx === this.turn;
+    });
+    this.playerTurnName = this.players[this.turn].name;
+    this.changeStatus('rolling');
+    this.currentCellDetail = null;
+    this.currentNItems = null;
+  }
+
+  updateCellPositions(cell: Cell) {
+    if (cell.players) {
       const positions = cell.innerCellOffset();
       for (let i = 0; i < cell.players.length; i++) {
-        if (cell.players[i] === player.ordinal) {
-          player.coords = positions[i];
-          player.coords.x += boardElement.offsetLeft;
-          player.coords.y += boardElement.offsetTop;
-        }
+        const player: Player = this.players[cell.players[i]];
+        player.position = cell.position;
+        player.coords.x = positions[i].x;
+        player.coords.y = positions[i].y;
       }
-    } else {
-      player.coords = new Point();
     }
   }
 
-  start() {
-    this.players.forEach(p => this.calculatePlayerPositions(p, this.board.cells[0]));
+  jumpToCell(player: Player, cellToJump: number) {
+    const currentCell = player.position;
+    if (currentCell === cellToJump) {
+      return;
+    }
+    player.position = cellToJump;
+
+    let cell = this.board.cells[cellToJump];
+    cell.players = cell.players || [];
+    cell.players.push(player.ordinal);
+    this.calculateCellPositions(cell);
+
+    cell = this.board.cells[currentCell];
+    const index = cell.players.indexOf(player.ordinal);
+    if (index > -1) {
+      cell.players.splice(index, 1);
+      this.calculateCellPositions(cell);
+    }
+  }
+
+  moveToPosition(player: Player, cellsToMove: number, callback) {
+    if (cellsToMove === 0) {
+      callback();
+      return;
+    }
+
+    const currentCell = player.position;
+    const nextCell = currentCell + 1;
+    if (nextCell >= this.board.cells.length) {
+      this.changeStatus('finished');
+      return;
+    }
+
+    this.jumpToCell(player, nextCell);
+
+    setTimeout(() => {
+        this.moveToPosition(player, cellsToMove - 1, callback);
+      }, this.speeds[this.speed]);
+  }
+
+  onRolled(movement: Movement) {
+    this.changeStatus('moving');
+    this.movement = movement;
+    const currentPosition = this.players[movement.turn].position;
+    const cellsToMove = movement.to - currentPosition;
+    if (cellsToMove > 0) {
+      this.moveToPosition(
+        this.players[movement.turn],
+        cellsToMove,
+        () => {
+          this.changeStatus('showCellDetails');
+          this.currentCellDetail = this.board.cells[movement.to];
+          this.currentNItems = this.players[movement.turn].nitems;
+        }
+      );
+    } else {
+      this.changeTurn();
+    }
+  }
+
+  actionCompleted() {
+    this.currentCellDetail = null;
+    this.currentNItems = null;
+    let timeout = 500;
+    if (this.movement.hasJump()) {
+      this.changeStatus('moving');
+      this.jumpToCell(this.players[this.movement.turn], this.movement.jumpInfo.to);
+      timeout = 1000;
+    }
+    setTimeout(this.changeTurn.bind(this), timeout);
+  }
+
+  calculateCellPositions(cell: Cell) {
+    const positions = cell.innerCellOffset();
+    for (let i = 0; i < cell.players.length; i++) {
+      const player = this.players[cell.players[i]];
+      player.coords.y = positions[i].y;
+      player.coords.x = positions[i].x;
+      console.log('Player coords: ' + player.coords.x + ' - ' + player.coords.y);
+    }
+  }
+
+  start(point: Point) {
+    const boardElement = document.getElementById('board');
+    this.offsetX = boardElement.offsetLeft;
+    this.offsetY = boardElement.offsetTop;
+    this.calculateCellPositions(this.board.cells[0]);
+    this.changeTurn();
   }
 
   ngOnInit() {
 
-    this.loading = true;
+    this.changeStatus('loading');
+    this.board = BoardComponent.emptyBoard();
 
     this.gameApi.getBoard().subscribe((game) => {
       this.gameId = game['id'];
@@ -361,13 +370,12 @@ export class BoardComponent implements OnInit {
         cell0.players.push(idx);
       });
 
-      this.movement = this.initializeMovement(this.board, this.players);
-      this.advance = this.movement.advance;
-      this.nextTurn = this.movement.nextTurn;
-      this.loading = false;
+      this.movement = new Movement();
+      this.movement.nextTurn = 0;
+      this.changeStatus('starting');
       this.minWidth = this.board.parameters['width'];
 
-      setTimeout(this.start.bind(this), 2000);
+      //setTimeout(this.start.bind(this), 2000);
     });
   }
 }

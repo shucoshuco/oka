@@ -40,4 +40,20 @@ export class GameApiService {
       catchError(this.handleError<Movement>('createGame'))
     );
   }
+
+  getCellDetail(cell: Cell): Observable<any> {
+    const url = `http://192.168.1.105:8080/cells/${cell.id}`;
+    return this.http.get<any>(url, {}).pipe(
+      tap((cellDetail: any) => console.log(`Fetched cell with id=${cell.id}`)),
+      catchError(this.handleError<any>('getCellDetail'))
+    );
+  }
+
+  getOkaDetail(pendingItems: boolean): Observable<any> {
+    const url = `http://192.168.1.105:8080/cells/oka`;
+    return this.http.get<any>(url, {params: {'pendingItems': pendingItems.toString()}}).pipe(
+      tap((cellDetail: any) => console.log(`Fetched oka`)),
+      catchError(this.handleError<any>('getCellDetail'))
+    );
+  }
 }

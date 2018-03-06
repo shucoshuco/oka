@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.fpg.oka.model.BoardConfiguration;
@@ -37,11 +38,10 @@ public class CellsController {
 	}
 	
 	@RequestMapping("/oka")
-	public ResponseEntity<Cell> oka() {
-		Cell cell = service.getOka();
-		return cell == null
-				? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-				: new ResponseEntity<>(cell, HttpStatus.OK);
+	public ResponseEntity<Cell> oka(
+			@RequestParam(name = "pendingItems", defaultValue="true") boolean pendingItems) {
+		Cell cell = service.getOka(pendingItems);
+		return new ResponseEntity<>(cell, HttpStatus.OK);
 	}
 	
 }

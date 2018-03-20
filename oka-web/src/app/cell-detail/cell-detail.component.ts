@@ -53,8 +53,6 @@ export class CellDetailComponent implements OnInit, OnChanges {
       } else {
         this.show = false;
       }
-    } else {
-      this.show = false;
     }
   }
 
@@ -71,15 +69,13 @@ export class CellDetailComponent implements OnInit, OnChanges {
     this.top = (this.offsetY + position.y - window.scrollY) + 'px';
     this.width = 0;
     this.height = 0;
-    this.position = 'fixed';
   }
 
   endPoint() {
     this.top = '50%';
     this.left = '50%';
-    this.width = 300;
-    this.height = 400;
-    this.position = 'fixed';
+    this.width = Math.max(window.innerWidth / 5, 300);
+    this.height = Math.max(window.innerHeight * 2 / 3, 400);
   }
 
   getImageUrl() {

@@ -1,6 +1,6 @@
 <div class="dice-wrapper" *ngIf="show" >
   <div class="background"></div>
-  <div class="dice-turn">
+  <div class="dice-turn" *ngIf="classStatus === 'rolling'">
     <b>{{playerName}}</b>, es tu turno. Lanza el dado.
   </div>
   <div id="dice" className="{{classStatus}} {{classNumber}}" (click)="rollDice()">

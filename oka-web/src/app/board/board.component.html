@@ -13,15 +13,13 @@
   <div *ngIf="!loading && !errorLoading" class="oka-wrapper">
     <div class="players-container">
       <div *ngFor="let player of players">
-        <app-player-info class="player-info" [player]="player"></app-player-info>
-        <app-board-player [offsetX]="offsetX"
-                          [offsetY]="offsetY"
-                          [playerX]="player.coords.x"
-                          [playerY]="player.coords.y"
-                          [gender]="player.gender"
-                          [speed]="'fast'">
-        </app-board-player>
-
+        <app-player-info class="player-info" [player]="player"
+                        [offsetX]="offsetX"
+                        [offsetY]="offsetY"
+                        [playerX]="player.coords.x"
+                        [playerY]="player.coords.y"
+                        [speed]="'fast'">
+        </app-player-info>
       </div>
     </div>
     <div id="board" class="board" (window:resize)="onResize($event)"
@@ -43,4 +41,5 @@
     <app-cell-detail [offsetX]="offsetX" [offsetY]="offsetY"
                      [cell]="currentCellDetail" [nitems]="currentNItems"
                      (done)="actionCompleted()"></app-cell-detail>
+    <app-winner [winner]="winner" (onClose)="ngOnInit()"></app-winner>
   </div>

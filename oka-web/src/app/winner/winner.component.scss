@@ -1,0 +1,42 @@
+@import '../common';
+
+h1 {
+  position: fixed;
+  left: 5%;
+  top: 20%;
+  display: block;
+  color: white;
+  z-index: 200;
+  font-size: 3em;
+  text-shadow: 3px 2px grey;
+
+  @media screen and (max-width: $break-small) {
+    font-size: 1.5em;
+    left: 0%;
+  }
+}
+
+p {
+  position: fixed;
+  left: 5%;
+  top: 40%;
+  display: block;
+  color: white;
+  z-index: 200;
+  font-size: 1.5em;
+
+  @media screen and (max-width: $break-small) {
+    font-size: 0.75em;
+    left: 0%;
+  }
+}
+
+button {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  display: block;
+  z-index: 200;
+  font-size: 1.5em;
+  margin: auto;
+}

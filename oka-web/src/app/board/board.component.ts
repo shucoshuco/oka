@@ -35,6 +35,8 @@ export class BoardComponent implements OnInit {
   currentCellDetail: Cell;
   currentNItems: number;
 
+  winner: string;
+
   constructor(private gameApi: GameApiService) {}
 
   static emptyBoard() {
@@ -265,7 +267,8 @@ export class BoardComponent implements OnInit {
     }
     player.position = cellToJump;
 
-    let cell = this.board.cells[cellToJump];
+    let cell = cellToJump >= this.board.cells.length
+      ? this.board.lastCell :  this.board.cells[cellToJump];
     cell.players = cell.players || [];
     cell.players.push(player.ordinal);
     this.calculateCellPositions(cell);
@@ -286,32 +289,37 @@ export class BoardComponent implements OnInit {
 
     const currentCell = player.position;
     const nextCell = currentCell + 1;
-    if (nextCell >= this.board.cells.length) {
-      this.changeStatus('finished');
-      return;
-    }
 
     this.jumpToCell(player, nextCell);
 
-    setTimeout(() => {
-        this.moveToPosition(player, cellsToMove - 1, callback);
+    if (nextCell < this.board.cells.length) {
+      setTimeout(() => {
+          this.moveToPosition(player, cellsToMove - 1, callback);
       }, this.speeds[this.speed]);
+    } else {
+      callback();
+    }
   }
 
   onRolled(movement: Movement) {
     this.changeStatus('moving');
     this.movement = movement;
-    const currentPosition = this.players[movement.turn].position;
-    const cellsToMove = movement.to - currentPosition;
+    const player = this.players[movement.turn];
+    const cellsToMove = movement.to - player.position;
     if (cellsToMove > 0) {
       this.moveToPosition(
-        this.players[movement.turn],
+        player,
         cellsToMove,
-        () => {
-          this.changeStatus('showCellDetails');
-          this.currentCellDetail = this.board.cells[movement.to];
-          this.currentNItems = this.players[movement.turn].nitems;
-        }
+        movement.end
+          ? () => {
+            this.changeStatus('finished');
+            this.winner = player.name;
+          }
+          : () => {
+            this.changeStatus('showCellDetails');
+            this.currentCellDetail = this.board.cells[movement.to];
+            this.currentNItems = player.nitems;
+          }
       );
     } else {
       this.changeTurn();
@@ -345,10 +353,25 @@ export class BoardComponent implements OnInit {
     this.offsetX = boardElement.offsetLeft;
     this.offsetY = boardElement.offsetTop;
     this.calculateCellPositions(this.board.cells[0]);
-    this.changeTurn();
+    setTimeout(this.changeTurn.bind(this), 1000);
   }
 
   ngOnInit() {
+
+    this.offsetX = this.offsetY = null;
+    this.gameId = null;
+  
+    this.board = null;
+    this.turn = null;
+    this.players = null;
+    this.playerTurnName = null;
+  
+    this.movement = null;
+  
+    this.currentCellDetail = null;
+    this.currentNItems = null;
+  
+    this.winner = null;
 
     this.changeStatus('loading');
     this.board = BoardComponent.emptyBoard();
@@ -375,7 +398,7 @@ export class BoardComponent implements OnInit {
       this.changeStatus('starting');
       this.minWidth = this.board.parameters['width'];
 
-      //setTimeout(this.start.bind(this), 2000);
+      setTimeout(this.start.bind(this), 2000);
     });
   }
 }

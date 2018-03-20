@@ -1,5 +1,11 @@
 <div class="player-info {{player.turn ? 'turn' : ''}}">
   <img class="player-gender" [src]="imageUrl" alt="{{player.gender}}"/>
+  <img class="player-gender player-file {{playerFileClass}} {{speed}}"
+      [src]="playerFileImageUrl" 
+      [style.top]="position.y + 'px'"
+      [style.left]="position.x + 'px'"
+      [style.margin-top]="margin.y + 'em'"
+      [style.margin-left]="margin.x + 'em'"/>
   <div class="player-names">
     <span class="player-name">{{player.name}}</span>
     <span class="player-alias">{{player.alias}}</span>

@@ -7,11 +7,11 @@ import { BoardCellComponent } from './board-cell/board-cell.component';
 import { CellImagePipe } from './cell-image.pipe';
 import { BoardCornerCellComponent } from './board-corner-cell/board-corner-cell.component';
 import { BoardComponent } from './board/board.component';
-import {GameApiService} from './game-api.service';
-import { BoardPlayerComponent } from './board-player/board-player.component';
+import { GameApiService } from './game-api.service';
 import { DiceComponent } from './dice/dice.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
 import { CellDetailComponent } from './cell-detail/cell-detail.component';
+import { WinnerComponent } from './winner/winner.component';
 
 
 @NgModule({
@@ -21,10 +21,10 @@ import { CellDetailComponent } from './cell-detail/cell-detail.component';
     CellImagePipe,
     BoardCornerCellComponent,
     BoardComponent,
-    BoardPlayerComponent,
     DiceComponent,
     PlayerInfoComponent,
-    CellDetailComponent
+    CellDetailComponent,
+    WinnerComponent
   ],
   imports: [
     BrowserModule, HttpClientModule

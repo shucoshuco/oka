@@ -112,5 +112,25 @@
       }
     }
   }
-}
 
+  .player-file {
+    position: absolute;
+    display: block;
+    z-index: 30;
+  
+    &.slow {
+      transition: all 0.7s ease-out;
+    }
+    &.medium {
+      transition: all 0.5s ease-out;
+    }
+    &.fast {
+      transition: all 0.3s ease-out;
+    }
+  
+    &.playing {
+      height: 1em;
+      width: 1em;
+    }
+  }
+}

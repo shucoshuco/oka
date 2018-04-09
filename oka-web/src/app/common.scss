@@ -4,19 +4,3 @@ $images: '/assets/censored/';
 
 $break-small: 320px;
 $break-large: 1200px;
-
-div.background {
-  min-width: 100%;
-  min-height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: black;
-  opacity: 0.7;
-  z-index: 100;
-
-  &.hidden {
-    display: none;
-  }
-}
-

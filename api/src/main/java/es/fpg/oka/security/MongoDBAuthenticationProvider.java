@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import es.fpg.oka.model.User;
-import es.fpg.oka.repository.UserRepository;
+import es.fpg.oka.model.common.User;
+import es.fpg.oka.repository.common.UserRepository;
 
 @Service
 public class MongoDBAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {

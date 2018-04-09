@@ -146,11 +146,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/")
 			.and()
 				.authorizeRequests()
-//					.antMatchers(
-//							"/", "/login", "/logout", 
-//							"/games/user/**", "/cells/**")
-//						.permitAll()
-//					.anyRequest().authenticated()
+					.antMatchers(
+							"/", "/login", "/logout", 
+							"/games/user/**", "/cells/**")
+						.permitAll()
+					.anyRequest().authenticated()
 					.anyRequest().permitAll()
 			.and()
 				.cors()

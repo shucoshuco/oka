@@ -1,0 +1,28 @@
+@import '../../../common';
+
+.dialog {
+  transition: all 0.5s ease-out;
+
+  &.show {
+    min-height: 400px;
+    min-width: 300px;
+  }
+}
+
+.dialog-content {
+  height: 85%;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  margin-bottom: 20px;
+}
+
+button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -1,5 +1,6 @@
 package es.fpg.oka.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -14,13 +15,16 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Configuration
 public class SpringConfiguration {
 
+	@Value("${security.cors.allowedOrigins}")
+	private String corsHost;
+	
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/login").allowedOrigins("http://localhost:3000");
-                registry.addMapping("/users/current").allowedOrigins("http://localhost:3000");
+                registry.addMapping("/login").allowedOrigins(corsHost);
+                registry.addMapping("/users/current").allowedOrigins(corsHost);
             }
         };
     }

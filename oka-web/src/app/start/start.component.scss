@@ -1,0 +1,146 @@
+@import '../common';
+
+$break-small: 600px;
+$break-large: 1600px;
+
+body {
+	min-width: 320px;
+	background-color: #FAFAFA;
+}
+
+.cover {
+	width: 2em;
+	height: 2em;
+	margin-right: 1em;
+}
+
+.hidden {
+	display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.intro {
+	height: 267px;
+	padding: 1em 3em;
+	background-image: url($images + '/background.jpg');
+	background-size: cover;
+	background-position: right top;
+	text-align: center;
+	color: white;
+
+	span {
+		display: block;
+		font-size: 1.5em;
+		width: 90%;
+		padding: 1em;
+
+		@media screen and (max-width: $break-small - 1) {
+		    font-size: 1em;
+		    font-weight: bold;
+		}
+	}
+}
+
+.loading-block {
+	display: block;
+	position: relative;
+	background-color: rgba(255, 235, 169, 0.25);
+	height: 85px;
+	width: 100%;
+}
+
+.summary {
+
+	padding: 1em 3em;
+
+	.summary-text {
+		float: left;
+		width: 75%;
+		margin-right: 3%;
+		text-align: justify;
+
+		@media screen and (max-width: $break-small - 1) {
+			width: 100%;
+		}
+	}
+
+	.summary-login {
+
+		margin-top: 1em;
+
+		@media screen and (max-width: $break-small - 1) {
+			float: right;
+		}
+
+	}
+}
+
+.loading {
+	margin-top: 1em;
+}
+
+.centered {
+	text-align: center;
+}
+
+.no-wrap {
+	white-space: no-wrap;
+}
+
+button.md-button.md-icon-button.remove {
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	margin: 0;
+
+	md-icon {
+		width: 48px;
+		height: 48px;		
+
+		svg {
+			width: 48px;
+			height: 48px;
+		}
+	}
+}
+
+form {
+	/* NOTE: Check the demo's HTML to see some additional RTL support CSS */
+	/* Setup animations similar to the ng-messages */
+	
+	.hint {
+		/* Position the hint */
+		position: absolute;
+		left: 2px;
+		right: auto;
+		bottom: 7px;
+		/* Copy styles from ng-messages */
+		font-size: 12px;
+		line-height: 14px;
+		transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+		/* Set our own color */
+		color: grey;
+	}
+
+	.hint.ng-hide, .hint.ng-enter, .hint.ng-leave.ng-leave-active {
+		bottom: 26px;
+		opacity: 0;
+	}
+
+	.hint.ng-leave, .hint.ng-enter.ng-enter-active {
+		bottom: 7px;
+		opacity: 1;
+	}
+}
+
+.two-columns {
+
+	flex-wrap: wrap;
+
+	& > .flex {
+		flex: 1 0 50%;
+	}
+}

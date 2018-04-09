@@ -1,0 +1,8 @@
+{
+	"_id": "1",
+	"name": "felix",
+	"password": "$2a$10$GC3pSzHhxVgBN7uz8Jj/LOnTjZBpUGjsbFBTSUMXFA98Fqa41BLoK",
+	"language": "es",
+	"gender": "MALE",
+	"registerDate": "2018-04-05"
+}

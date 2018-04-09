@@ -1,0 +1,39 @@
+<div class="md-padding">
+	<div class="container" *ngIf="loading">
+		<div class="loading-block">
+			<span>Loading...</span>
+		</div>
+	</div>
+
+	<section class="intro" *ngIf="!loading">
+		<h1>GAMEsutra</h1>
+		<span>
+      Disfruta de los juegos sexuales en compañía más interesanes con quien tu elijas.
+     Sólo tú te impones tus límites.
+    </span>
+		<button (click)="startDefault()" class="">Probar</button>
+	</section>
+	<section class="summary" *ngIf="!loading">
+		<div class="summary-text">
+			<p>
+        OK, OK, ya sé lo que estás pensando: "Otra página más de (aburridos) juegos sexuales.
+        Busca a la chica, mueve rápido el ratón, easy, gentle, hard..." Mejor sigue leyendo ;-)
+			</p>
+			<p>
+        Te equivocas, ésta no es una página para lobos solitarios de Internet con ganas de
+        pornografía virtual. En este caso tienes que traerte a la pareja de casa (vale, es
+        cierto, también se puede buscar una por internet, pero en cualquier caso nunca será
+        una máquina, sino alguien de carne y hueso).
+			</p>
+			<p>
+        Te encuentras ante la primera página pensada para juegos sexuales reales en pareja o
+        grupo. Lo que aquí te proponemos únicamente son experiencias fantásticas para vivir
+        el sexo de verdad con quien tú quieras (y él / ella :)).
+			</p>
+		</div>
+		<div class="summary-login" layout="column" layout-xs="row">
+			<button class="md-accent md-raised" (click)="showLogin($event)">Acceder</button>
+			<button class="md-warn md-raised" (click)="showRegistry($event)">Regístrate</button>
+		</div>
+	</section>
+</div>

@@ -3,6 +3,7 @@ package es.fpg.oka.security;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import es.fpg.oka.model.User;
+import es.fpg.oka.model.common.User;
 import lombok.Getter;
 
 public class CustomPrincipal implements UserDetails {
@@ -57,12 +58,16 @@ public class CustomPrincipal implements UserDetails {
 		principal.password = user.getPassword();
 		principal.language = user.getLanguage();
 		principal.endSubscription = user.getEndSubscription();
-		principal.authorities =
-				Arrays.asList(user.getRoles()).stream()
-	    			.map(s -> "ROLE_" + s)
-	    			.map(SimpleGrantedAuthority::new)
-	    			.collect(Collectors.toList());
-
+		if (user.getRoles() != null) {
+			principal.authorities =
+					Arrays.stream(user.getRoles())
+		    			.map(s -> "ROLE_" + s)
+		    			.map(SimpleGrantedAuthority::new)
+		    			.collect(Collectors.toList());
+		} else {
+			principal.authorities = Collections.emptyList();
+		}
+		
 		return principal;
 	}
 }

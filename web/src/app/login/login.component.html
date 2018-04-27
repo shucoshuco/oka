@@ -1,0 +1,18 @@
+<div class="login-wrapper">
+  <div className="background {{show ? '' : 'hidden'}}"></div>
+  <div class="dialog" [@loginWindow]="state">
+    <h2>Login</h2>
+    <div class="dialog-content">
+      <app-input [text]="'Username'"></app-input>
+      <app-input [text]="'Password'" [type]="'password'"></app-input>
+    </div>
+    <div class="dialog-buttons">
+      <div class="dialog-button">
+        <button (click)="cancelLogin()" class="button-error">Cancel</button>
+      </div>
+      <div class="dialog-button">
+        <button (click)="doLogin()">Accept</button>
+      </div>
+    </div>
+  </div>
+</div>

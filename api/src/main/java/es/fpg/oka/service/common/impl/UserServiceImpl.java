@@ -29,7 +29,12 @@ public class UserServiceImpl extends SecuredServiceBase implements UserService {
 
 	@Override
 	public User getCurrentUser() {
-		return repository.findOne(getCurrentPrincipalId());
+		return repository.findOne(getCurrentAuthenticatedPrincipal().getId());
+	}
+	
+	@Override
+	public User updateUser(User user) {
+		return repository.save(user);
 	}
 	
 	private void validateUserRegistration(UserRegistration user) {

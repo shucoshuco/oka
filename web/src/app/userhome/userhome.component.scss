@@ -1,0 +1,27 @@
+ul {
+    list-style-type: none;
+    padding-left: 10px;
+
+    li {
+        border-bottom: 1px solid #888;
+    }
+}
+
+img {
+    width: auto;
+    height: 50px;
+    vertical-align: middle;
+    float: left;
+    margin-right: 10px;
+}
+
+p {
+    &.game-name {
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    button {
+        float: right;
+    }
+}

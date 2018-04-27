@@ -1,0 +1,32 @@
+<h2>Dados</h2>
+  <p>Sin rodeos. Lanza los dados y comienza a disfrutar.</p>
+  <div class="loading" *ngIf="status === 'loading'">
+    Loading game...
+  </div>
+  <div *ngIf="status === 'errorLoading'">
+    There was an error loading this game. Please, try again in a few minutes.
+  </div>
+  <div class="container" *ngIf="status !== 'loading'">
+    <div class="dice-wrapper">
+      <h2>Position</h2>
+      <app-image-dice [spinClaz]="'first'" [diceValue]="positionDiceValue"
+          [asText]="false" [allFaces]="positionsUrls"
+          [style.display]="showDices ? 'block' : 'none'">
+      </app-image-dice>
+      <div *ngIf="!showDices">
+        <h3>{{selectedPosition.name}}</h3>
+        <img [src]="selectedPosition.url"/>
+        <p>{{selectedPosition.description}}</p>
+      </div>
+    </div>
+    <div class="dice-wrapper">
+      <h2>Time</h2>
+      <app-image-dice [spinClaz]="'second'" [diceValue]="timeDiceValue"
+          [asText]="true" [allFaces]="timesTexts"
+          [style.display]="showDices ? 'block' : 'none'">
+      </app-image-dice>
+      <app-dices-timer *ngIf="!showDices" [diceValue]="selectedTime"
+        (onTimeOut)="nextStep()"></app-dices-timer>
+    </div>
+  </div>
+  <button (click)="nextStep()" *ngIf="rolling">{{buttonText}}</button>

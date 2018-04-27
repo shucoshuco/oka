@@ -1,0 +1,54 @@
+@import '../common';
+
+p {
+    margin: 6px 0;
+}
+
+input {
+    border: none;
+    border-bottom: 1px solid gray;
+    width: 100%;
+    margin-bottom: 1em;
+    cursor: pointer;
+
+    &:focus {
+        outline-width: 0;
+        border-bottom: 2px solid blue;
+    }
+}
+
+label {
+    
+    cursor: pointer;
+
+    span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        pointer-events: none;
+        padding-left: 0px;
+        padding-right: 0;
+        max-width: 100%;
+        font-size: 1.2em;
+        position: relative;
+        top: 15px;
+        left: 5px;
+        
+        &.selected {
+            color: blue;
+        }
+    }
+
+    div.clear {
+        width: 10px;
+        height: 10px;
+        float: right;
+        display: block;
+        position: relative;
+        top: -30px;
+        background-image: url($images + '/letter-x.png');
+        background-position: center;
+        background-size: contain;
+    }
+}

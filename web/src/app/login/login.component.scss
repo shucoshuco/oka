@@ -1,0 +1,23 @@
+@import "../common";
+
+div.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    margin-left: -150px;
+    margin-top: -150px;
+    z-index: 200;
+}
+
+div.dialog-button {
+    width: 50%;
+    float: left;
+}
+
+button {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

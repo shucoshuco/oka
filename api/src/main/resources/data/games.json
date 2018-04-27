@@ -1,0 +1,14 @@
+[
+	{
+		"_id": "1",
+		"name": "OKASutra",
+		"description": "El clásico juego de la oka adaptado a las relaciones de pareja",
+		"image": "oka.jpg"
+	},
+	{
+		"_id": "2",
+		"name": "Dados",
+		"description": "Directo al grano. Lanza los dados y comienza a disfrutar",
+		"image": "dados.jpg"
+	}
+]

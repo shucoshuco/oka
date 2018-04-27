@@ -29,7 +29,7 @@ public class BoardConfigurationServiceImpl extends SecuredServiceBase implements
 
 	@Override
 	public BoardConfiguration insert(BoardConfiguration configuration) {
-		configuration.setUserId(getCurrentPrincipalId());
+		configuration.setUserId(getCurrentAuthenticatedPrincipal().getId());
 		return configRepository.insert(configuration);
 	}
 
@@ -37,7 +37,7 @@ public class BoardConfigurationServiceImpl extends SecuredServiceBase implements
 	public BoardConfiguration update(BoardConfiguration configuration) {
 		BoardConfiguration bc = getConfiguration(configuration.getId());
 		if (bc != null && validUser(bc.getUserId())) {
-			configuration.setUserId(getCurrentPrincipalId());
+			configuration.setUserId(getCurrentAuthenticatedPrincipal().getId());
 			return configRepository.save(configuration);
 		}
 		return null;
@@ -46,13 +46,13 @@ public class BoardConfigurationServiceImpl extends SecuredServiceBase implements
 	@Override
 	public void delete(long id) {
 		BoardConfiguration entity = new BoardConfiguration();
-		entity.setUserId(getCurrentPrincipalId());
+		entity.setUserId(getCurrentAuthenticatedPrincipal().getId());
 		entity.setId(id);
 		configRepository.delete(entity);
 	}
 
 	@Override
 	public List<BoardConfiguration> getAllConfigurationsOfUser() {
-		return configRepository.findByUserId(getCurrentPrincipalId());
+		return configRepository.findByUserId(getCurrentAuthenticatedPrincipal().getId());
 	}
 }

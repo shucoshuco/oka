@@ -1,0 +1,55 @@
+<div *ngIf="user">
+  <h1>Welcome {{user.name}}!!</h1>
+  <p>Last login: {{lastAccess | date:'long':'':'es'}}</p>
+  <p>Registration date: {{registerDate | date:'longDate':'':'es'}}</p>
+  <div class="last-games">
+    <h3>Last played games:</h3>
+    <ul>
+      <li *ngFor="let lastGame of lastGames">
+        <img [src]="lastGame.image"/>
+        <span class="game-name">{{lastGame.name}}</span>
+        <span class="game-date">{{lastGame.date}}</span>
+        <span class="game-winner">{{lastGame.winner}}</span>
+      </li>
+    </ul>
+  </div>
+  <div class="new-game">
+    <h3>Start new game</h3>
+    <ul>
+      <li *ngFor="let game of availableGames">
+        <img [src]="game.image"/>
+        <p class="game-name">
+          {{game.name}}
+          <button (click)="startNewGame(game.id)">Start new game</button>
+        </p>
+        <p class="game-description">{{game.description}}</p>
+      </li>
+    </ul>
+  </div>
+  <div class="frequent-game">
+    <h3>Frequent games</h3>
+    <ul>
+      <li *ngFor="let game of frequentGames">
+        <img [src]="game.image"/>
+        <p class="game-name">
+          {{game.name}}
+          <button (click)="startNewGame(game.id)">Start new game</button>
+        </p>
+        <p class="game-description">{{game.description}}</p>
+      </li>
+    </ul>
+  </div>
+  <div class="preferred-game">
+    <h3>Your preferred games</h3>
+    <ul>
+      <li *ngFor="let game of preferredGames">
+        <img [src]="game.image"/>
+        <p class="game-name">
+          {{game.name}}
+          <button (click)="startNewGame(game.id)">Start new game</button>
+        </p>
+        <p class="game-description">{{game.description}}</p>
+      </li>
+    </ul>
+  </div>
+</div>

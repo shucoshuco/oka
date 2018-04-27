@@ -65,5 +65,4 @@ logging:
     root: WARN
     es: DEBUG
     org:
-      springframework:
-        security: DEBUG   
+      springframework: DEBUG

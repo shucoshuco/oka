@@ -1,0 +1,28 @@
+<div class="register-wrapper">
+  <div className="background {{show ? '' : 'hidden'}}"></div>
+  <div class="dialog" [@registerWindow]="state">
+    <h2>Register</h2>
+    <div class="dialog-content">
+      <app-input [text]="'Username'"></app-input>
+      <app-input [text]="'Password'" [type]="'password'"></app-input>
+      <app-input [text]="'Confirm password'" [type]="'password'"></app-input>
+      <p>
+        <label>
+          Gender:
+          <select name="gender" [(ngModel)]="gender">
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+          </select>
+        </label>
+      </p>
+    </div>
+    <div class="dialog-buttons">
+      <div class="dialog-button">
+        <button (click)="cancelRegister()" class="button-error">Cancel</button>
+      </div>
+      <div class="dialog-button">
+        <button (click)="doRegister()">Accept</button>
+      </div>
+    </div>
+  </div>
+</div>

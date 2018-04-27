@@ -2,7 +2,9 @@ package es.fpg.oka.model.common;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 
@@ -22,4 +24,6 @@ public class User {
 	private String [] roles;
 	private Instant lastAccess;
 	private Instant nextLastAccess;
+	
+	private Map<String, Long> gameHits = new HashMap<>();
 }

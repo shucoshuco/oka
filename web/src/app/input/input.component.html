@@ -1,0 +1,7 @@
+<p>
+  <label>
+    <span [@inputLabel]='state' class="{{spanClass}}">{{text}}:</span>
+    <input type="{{type}}" [(ngModel)]="value" (focus)='select()' (blur)='deselect()' #input/>
+    <div class="clear" (click)="clear()" *ngIf="value !== ''"></div>
+  </label>
+</p>
